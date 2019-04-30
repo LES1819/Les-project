@@ -42,6 +42,8 @@ public class AtividadeController implements Serializable {
     private List<Atividade> atividadesOnList;
 
     public AtividadeController() {
+        selectedItems = new HashMap<>();
+        activitiesOnList = new ArrayList<>();
     }
 
     public Atividade getSelected() {
@@ -197,6 +199,21 @@ public class AtividadeController implements Serializable {
         }
     }
 
+    public void destroyAtividade(Atividade a) {
+        current = a;
+        performDestroyFull();
+        recreatePagination();
+        recreateModel();
+    }
+
+    public String destroyActivities() {
+        prepareSelectedList();
+        for (int i = 0; i < activitiesOnList.size(); i++) {
+            destroyAtividade(activitiesOnList.get(i));
+        }
+        return "List";
+    }
+    
     public String destroy() {
         current = (Atividade) getItems().getRowData();
         selectedItemIndex = pagination.getPageFirstItem() + getItems().getRowIndex();
@@ -216,6 +233,24 @@ public class AtividadeController implements Serializable {
             // all items were removed - go back to list
             recreateModel();
             return "List";
+        }
+    }
+    
+        public String destroyAndList() {
+        performDestroyFull();
+        recreateModel();
+        updateCurrentItem();
+        recreateModel();
+        return "List";
+    }
+    
+    private void performDestroyFull() {
+        try {
+            getFacade().destroyAtividade(current);
+            getFacade().remove(current);
+            JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/resources/Bundle").getString("AtividadeDeleted"));
+        } catch (Exception e) {
+            JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/resources/Bundle").getString("PersistenceErrorOccured"));
         }
     }
 
