@@ -149,7 +149,7 @@ public class AtividadeController implements Serializable {
     public void associateSelectedList(){
         prepareSelectedList();
         for(Atividade a : atividadesOnList){
-            prepareAssociate(a, 1);
+            FinalAssociate(a);
         }
     }
         
