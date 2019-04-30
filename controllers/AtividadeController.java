@@ -24,6 +24,7 @@ import javax.faces.model.DataModel;
 import javax.faces.model.ListDataModel;
 import javax.faces.model.SelectItem;
 import jpa.entities.Processo;
+import jpa.entities.Utilizador;
 
 @Named("atividadeController")
 @SessionScoped
