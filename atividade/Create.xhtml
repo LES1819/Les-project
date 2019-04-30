@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:a="http://xmlns.jcp.org/jsf/passthrough">
+
+    <ui:composition template="/template.xhtml">
+        <ui:define name="title">
+            <h:outputText value="#{bundle.CreateAtividadeTitle}"></h:outputText>
+        </ui:define>
+        <ui:define name="content">
+            <div class="row" style="margin-top: 2%;">
+                <h2>#{bundle.CreateAtividadeTitle}</h2>
+            </div>
+            <div class="row tabela" style="margin-top:1%">
+                <h:form style="width:100%;">
+                    <h:messages errorStyle="color: red" infoStyle="color: green" layout="table"/>
+            
+                    <div class="row form-group row ajustar_caixas2">
+                        <h:outputLabel value="#{bundle.CreateAtividadeLabel_nome} (Obrigatório)" for="StaticText" class="col-md-2" style="text-align: left;padding-left: 15px;" />
+                        <div class="col desc">
+                            <h:inputText class="form-control" id="StaticText" value="#{atividadeController.selected.nome}"  title="#{bundle.CreateAtividadeTitle_nome}" a:placeholder="Insira Nome aqui" required="true" />
+                        </div>
+                        </div>
+                  
+                   <div class=" row form-group row ajustar_caixas2" style="height: 60%">
+                       <h:outputLabel for="inputDescricao" value="Descrição:" style="text-align: left;padding-left: 15px;" class="col-md-2"/>
+                        <div class="col desc"  style="height: 100%">
+                            <h:inputTextarea class="form-control" style="height: 100%" id="inputDescricao" rows="3" value="#{atividadeController.selected.descricao}" a:placeholder="Insira a Descrição aqui"/>
+                        </div>
+                      
+                    </div>                    
+
+                    
+                    <div class="row">
+                        <h:button class="btn btn-primary" outcome="/atividade/List" value="Cancelar" style="position: absolute; right: 140px"/>
+                        <h:commandButton type="submit" class="btn btn-primary" style="position: absolute; right: 20px;" value="Registar" action="#{atividadeController.create()}" />
+                    </div>
+                    
+                </h:form>
+                <h:button outcome="#{papelController.prepareAsssociate()}" style="margin-left:2%;height: 8%;margin-top: 0.5%;" value="Associar Papéis"/>
+                <h:button outcome="#{produtoController.prepareAssociate()}" style="margin-left:2%;height: 8%;margin-top: 0.5%;" value="Associar Produtos"/>
+            </div>
+        </ui:define>
+    </ui:composition>
+
+</html>
