@@ -35,6 +35,8 @@ public class AtividadeController implements Serializable {
     private jpa.session.AtividadeFacade ejbFacade;
     private PaginationHelper pagination;
     private int selectedItemIndex;
+    private Utilizador utilizador;
+    private Processo processo;
     
     private Map<Atividade, Boolean> selectedItems = new HashMap<Atividade, Boolean>();
     private List<Atividade> atividadesOnList;
@@ -115,11 +117,15 @@ public class AtividadeController implements Serializable {
         return "View";
     }
 
-    public String prepareCreate() {
+  public String prepareCreate() {
         current = new Atividade();
         selectedItemIndex = -1;
+        utilizador = new Utilizador();
+        utilizador.setIdUtilizador(1);
+        current.setUtilizadoridUtilizador(utilizador);
         return "Create";
     }
+    
 
     public String create() {
         try {
@@ -145,14 +151,23 @@ public class AtividadeController implements Serializable {
         }
     }
         
-    public String prepareAssociate(Atividade a, int idProc){        
+     public String prepareAssociate(){
         current = new Atividade();
+        selectedItemIndex= -1;
+        processo = new Processo();
+        processo.setIdProcesso(31);
+        current.setProcessoidProcesso(processo);
+        utilizador = new Utilizador();
+        utilizador.setIdUtilizador(1);
+        current.setUtilizadoridUtilizador(utilizador);
+        return "/atividade/Associate";
+    }
+    
+    public String FinalAssociate(Atividade a){        
         current.setIdAtividades(0);
         current.setNome(a.getNome());
         current.setDescricao(a.getDescricao());
-        current.setUtilizadoridUtilizador(a.getUtilizadoridUtilizador()); 
         current.setDataCriacao(new Date(System.currentTimeMillis()));
-        current.setProcessoidProcesso(new Processo(idProc));
         current.setIdAtividadeOriginal(a);
         associate();
         recreatePagination();
