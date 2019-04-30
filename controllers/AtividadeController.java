@@ -6,10 +6,6 @@ import jsf.util.PaginationHelper;
 import jpa.session.AtividadeFacade;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.ResourceBundle;
 import javax.ejb.EJB;
 import javax.inject.Named;
@@ -21,6 +17,8 @@ import javax.faces.convert.FacesConverter;
 import javax.faces.model.DataModel;
 import javax.faces.model.ListDataModel;
 import javax.faces.model.SelectItem;
+import jpa.entities.Processo;
+import jpa.entities.Utilizador;
 
 @Named("atividadeController")
 @SessionScoped
@@ -28,70 +26,14 @@ public class AtividadeController implements Serializable {
 
     private Atividade current;
     private DataModel items = null;
-    private Map<Atividade, Boolean> selectedItems;
-    private List<Atividade> activitiesOnList;
     @EJB
     private jpa.session.AtividadeFacade ejbFacade;
     private PaginationHelper pagination;
     private int selectedItemIndex;
+    private Utilizador utilizador;
+    private Processo processo;
 
     public AtividadeController() {
-              selectedItems = new HashMap<>();
-        activitiesOnList = new ArrayList<>();
-    }
-    
-            public void prepareSelectedList() {
-        activitiesOnList = new ArrayList<>();
-        for(Atividade a : selectedItems.keySet()) {
-            if (selectedItems.get(a) == true) {
-                activitiesOnList.add(a);
-            }
-        }
-    }
-
-    public Map<Atividade, Boolean> getSelectedItems() {
-        return selectedItems;
-    }
-    
-    public DataModel getOriginalItems() {
-        if (items == null) {
-            items = getOriginalPagination().createPageDataModel();
-        }
-        return items;
-    }
-    
-    public PaginationHelper getOriginalPagination() {
-        if (pagination == null) {
-            pagination = new PaginationHelper(10) {
-
-                @Override
-                public int getItemsCount() {
-                    return getFacade().countOriginal();
-                }
-
-                @Override
-                public DataModel createPageDataModel() {
-                    return new ListDataModel(getFacade().getOriginal());
-                }
-
-            };
-        }
-        return pagination;
-    }
-    
-    public void destroyAtividade(Atividade a) {
-        current = a;
-        performDestroyFull();
-        recreatePagination();
-        recreateModel();
-    }
-
-    public String destroyActivities() {
-        prepareSelectedList();
-        for (int i = 0; i < activitiesOnList.size(); i++) {
-            destroyAtividade(activitiesOnList.get(i));
-        }
-        return "List";
     }
 
     public Atividade getSelected() {
@@ -108,7 +50,7 @@ public class AtividadeController implements Serializable {
 
     public PaginationHelper getPagination() {
         if (pagination == null) {
-            pagination = new PaginationHelper(5) {
+            pagination = new PaginationHelper(10) {
 
                 @Override
                 public int getItemsCount() {
@@ -117,7 +59,7 @@ public class AtividadeController implements Serializable {
 
                 @Override
                 public DataModel createPageDataModel() {
-                    return new ListDataModel(getFacade().findRange(new int[]{getPageFirstItem(), getPageFirstItem() + getPageSize()-1}));
+                    return new ListDataModel(getFacade().findRange(new int[]{getPageFirstItem(), getPageFirstItem() + getPageSize()}));
                 }
             };
         }
@@ -138,7 +80,20 @@ public class AtividadeController implements Serializable {
     public String prepareCreate() {
         current = new Atividade();
         selectedItemIndex = -1;
+        utilizador = new Utilizador();
+        utilizador.setIdUtilizador(1);
+        current.setUtilizadoridUtilizador(utilizador);
         return "Create";
+    }
+    
+    
+    public String prepareAssociate(){
+        current = new Atividade();
+        selectedItemIndex= -1;
+        processo = new Processo();
+        processo.setIdProcesso(31);
+        current.setProcessoidProcesso(processo);
+        return "/atividade/Associate";
     }
 
     public String create() {
@@ -178,14 +133,6 @@ public class AtividadeController implements Serializable {
         return "List";
     }
 
-    public String destroyAndList() {
-        performDestroyFull();
-        recreateModel();
-        updateCurrentItem();
-        recreateModel();
-        return "List";
-    }
-    
     public String destroyAndView() {
         performDestroy();
         recreateModel();
@@ -199,16 +146,6 @@ public class AtividadeController implements Serializable {
         }
     }
 
-    private void performDestroyFull() {
-        try {
-            getFacade().destroyAtividade(current);
-            getFacade().remove(current);
-            JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/resources/Bundle").getString("AtividadeDeleted"));
-        } catch (Exception e) {
-            JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/resources/Bundle").getString("PersistenceErrorOccured"));
-        }
-    }
-    
     private void performDestroy() {
         try {
             getFacade().remove(current);
