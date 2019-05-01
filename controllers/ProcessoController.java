@@ -6,6 +6,12 @@ import jsf.util.PaginationHelper;
 import jpa.session.ProcessoFacade;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 import javax.ejb.EJB;
 import javax.inject.Named;
@@ -34,8 +40,13 @@ public class ProcessoController implements Serializable {
     private Utilizador utilizador;
     private Processo processo;
     private Cookie tiago=new Cookie("e","gay");
-    
+
+      private Map<Processo, Boolean> selectedItems = new HashMap<Processo, Boolean>();
+    private List<Processo> processosOnList;
+
     public ProcessoController() {
+        selectedItems = new HashMap<>();
+        processosOnList = new ArrayList<>();
     }
 
     public Processo getSelected() {
@@ -45,6 +56,20 @@ public class ProcessoController implements Serializable {
         }
         return current;
     }
+
+        private void prepareSelectedList(){
+       processosOnList = new ArrayList<Processo>();
+        for(Processo a : selectedItems.keySet()){
+            if(selectedItems.get(a) == true){
+                processosOnList.add(a);
+            }
+        }
+    }
+
+    public Map<Processo, Boolean> getSelectedItems(){
+        return selectedItems;
+    }
+
 
     private ProcessoFacade getFacade() {
         return ejbFacade;
@@ -67,6 +92,26 @@ public class ProcessoController implements Serializable {
         }
         return pagination;
     }
+
+    public PaginationHelper getOriginalPagination() {
+        if (pagination == null) {
+            pagination = new PaginationHelper(10) {
+
+                @Override
+                public int getItemsCount() {
+                    return getFacade().countOriginal();
+                }
+
+                @Override
+                public DataModel createPageDataModel() {
+                    return new ListDataModel(getFacade().getOriginal());
+                }
+                
+            };
+        }
+        return pagination;
+    }
+
 
     public String prepareList() {
         recreateModel();
@@ -105,10 +150,40 @@ public class ProcessoController implements Serializable {
         }
     }
 
+    public void associateSelectedList(){
+        prepareSelectedList();
+        for(Processo a : processosOnList){
+            FinalAssociate(a);
+        }
+    }
+
+      public String FinalAssociate(Processo a){        
+        current.setIdProcesso(0);
+        current.setNome(a.getNome());
+        current.setDescricao(a.getDescricao());      
+        current.setIdProcessoOriginal(a);
+        associate();
+        recreatePagination();
+        recreateModel();
+        return "Associate";
+    }
+
     public String prepareEdit() {
         current = (Processo) getItems().getRowData();
         selectedItemIndex = pagination.getPageFirstItem() + getItems().getRowIndex();
         return "Edit";
+    }
+
+
+       public String associate() {
+        try {
+            getFacade().create(current);
+            JsfUtil.addSuccessMessage("Processo Associado");
+            return prepareCreate();
+        } catch (Exception e) {
+            JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/resources/Bundle").getString("PersistenceErrorOccured"));
+            return null;
+        }
     }
 
     public String update() {
@@ -120,6 +195,21 @@ public class ProcessoController implements Serializable {
             JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/resources/Bundle").getString("PersistenceErrorOccured"));
             return null;
         }
+    }
+
+       public void destroyProcesso(Processo a) {
+        current = a;
+        performDestroyFull();
+        recreatePagination();
+        recreateModel();
+    }
+
+        public String destroyProcessos() {
+        prepareSelectedList();
+        for (int i = 0; i < processosOnList.size(); i++) {
+            destroyProcesso(processosOnList.get(i));
+        }
+        return "List";
     }
 
     public String destroy() {
@@ -136,13 +226,32 @@ public class ProcessoController implements Serializable {
         recreateModel();
         updateCurrentItem();
         if (selectedItemIndex >= 0) {
-            return "List";
+            return "View";
         } else {
             // all items were removed - go back to list
             recreateModel();
             return "List";
         }
     }
+
+     public String destroyAndList() {
+        performDestroyFull();
+        recreateModel();
+        updateCurrentItem();
+        recreateModel();
+        return "List";
+}
+
+    private void performDestroyFull() {
+        try {
+            getFacade().destroyProcesso(current);
+            getFacade().remove(current);
+            JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/resources/Bundle").getString("ProcessoDeleted"));
+        } catch (Exception e) {
+            JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/resources/Bundle").getString("PersistenceErrorOccured"));
+        }
+    }
+
 
     private void performDestroy() {
         try {
@@ -152,6 +261,7 @@ public class ProcessoController implements Serializable {
             JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/resources/Bundle").getString("PersistenceErrorOccured"));
         }
     }
+
 
     private void updateCurrentItem() {
         int count = getFacade().count();
@@ -174,6 +284,16 @@ public class ProcessoController implements Serializable {
         }
         return items;
     }
+
+    public DataModel getOriginalItems(){
+        recreatePagination();
+        recreateModel();
+        if(items == null) {
+            items = getOriginalPagination().createPageDataModel();
+        }
+        return items;
+    }
+
 
     private void recreateModel() {
         items = null;
