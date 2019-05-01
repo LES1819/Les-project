@@ -44,7 +44,7 @@ public class AtividadeController implements Serializable {
 
     public AtividadeController() {
         selectedItems = new HashMap<>();
-        activitiesOnList = new ArrayList<>();
+        atividadesOnList = new ArrayList<>();
     }
 
     public Atividade getSelected() {
