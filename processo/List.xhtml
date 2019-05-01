@@ -5,19 +5,44 @@
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:f="http://xmlns.jcp.org/jsf/core">
 
-    <ui:composition template="/template.xhtml">
+    <ui:composition template="../template.xhtml">
         <ui:define name="title">
             <h:outputText value="#{bundle.ListProcessoTitle}"></h:outputText>
         </ui:define>
         <ui:define name="content">
-            <h:form styleClass="jsfcrud_list_form">
+            <br/>
+
+          
+               
+            
+
+            <h:form styleClass="jsfcrux\d_list_form">
+                 
+                <div class="btn-group right">
+                    <h:commandButton class="check btn btn-secondary" action="#{processoController.prepareCreate}" value="Criar"/>
+
+                    <button type="button" class="check btn btn-danger" data-toggle="modal" data-target="#exampleModal" disabled="false"><span>Apagar</span></button>
+
+                </div> 
+                <br />
                 <h:panelGroup id="messagePanel" layout="block">
                     <h:messages errorStyle="color: red" infoStyle="color: green" layout="table"/>
                 </h:panelGroup>
+                 <h:outputText value="#{processoController.pagination.pageFirstItem +1}..#{processoController.pagination.pageLastItem + 1}/#{processoController.pagination.itemsCount}"/>&nbsp;
                 <h:outputText escape="false" value="#{bundle.ListProcessoEmpty}" rendered="#{processoController.items.rowCount == 0}"/>
                 <h:panelGroup rendered="#{processoController.items.rowCount > 0}">
-                    <br />
-                    <h:dataTable  value="#{processoController.items}" var="item" border="0" cellpadding="2" cellspacing="0" rowClasses="jsfcrud_odd_row,jsfcrud_even_row" rules="all" style="border:solid 1px">
+                    <h:commandLink action="#{processoController.previous}" value="#{bundle.Previous} #{processoController.pagination.pageSize}" rendered="#{processoController.pagination.hasPreviousPage}"/>&nbsp;
+                    <h:commandLink action="#{processoController.next}" value="#{bundle.Next} #{processoController.pagination.pageSize}" rendered="#{processoController.pagination.hasNextPage}"/>&nbsp;
+                    <div class="table">
+                    <h:dataTable value="#{processoController.items}" var="item" border="0" cellpadding="2" cellspacing="0" rowClasses="jsfcrud_odd_row,jsfcrud_even_row" rules="all">
+                        <h:column>
+                            <f:facet name ="header">
+                                <h:selectBooleanCheckbox onclick="toggleAll()"></h:selectBooleanCheckbox>
+                            </f:facet>
+                            <h:selectBooleanCheckbox class="check[]" onclick="toggle()" value="#{processoController.selectedItems[item]}"></h:selectBooleanCheckbox>
+                        </h:column>
+
+
                         <h:column>
                             <f:facet name="header">
                                 <h:outputText value="#{bundle.ListProcessoTitle_idProcesso}"/>
@@ -48,19 +73,44 @@
                             </f:facet>
                             <h:commandLink action="#{processoController.prepareView}" value="#{bundle.ListProcessoViewLink}"/>
                             <h:outputText value=" "/>
-                            <h:commandLink action="#{processoController.prepareEdit}" value="#{bundle.ListProcessoEditLink}"/>
+
                             <h:outputText value=" "/>
-                            <h:commandLink action="#{processoController.destroy}" value="#{bundle.ListProcessoDestroyLink}"/>
+
                         </h:column>
+
                     </h:dataTable>
+                    </div>
                 </h:panelGroup>
+            
                 <br />
-                <h:commandLink action="#{processoController.prepareCreate}" value="#{bundle.ListProcessoCreateLink}"/>
+                <br />
+
                 <br />
                 <br />
-                <h:link outcome="/index" value="#{bundle.ListProcessoIndexLink}"/>
+                <div class="modal fade"  id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Apagar o(s) Processo(s)?</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <p id="modalid">Irá apagar as cópias deste(s) processo(s) e as suas associações</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                            <h:commandButton class="btn btn-primary" action="#{processoController.destroyProcessos()}" value="Apagar"></h:commandButton>
+                        </div>
+                    </div>
+                </div>
+            </div>
+                
             </h:form>
+            
+
+            <h:outputScript library ="javascript" name ="checkboxes.js" />
         </ui:define>
     </ui:composition>
-
 </html>
