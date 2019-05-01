@@ -150,23 +150,7 @@ public class ProcessoController implements Serializable {
         }
     }
 
-    public void associateSelectedList(){
-        prepareSelectedList();
-        for(Processo a : processosOnList){
-            FinalAssociate(a);
-        }
-    }
-
-      public String FinalAssociate(Processo a){        
-        current.setIdProcesso(0);
-        current.setNome(a.getNome());
-        current.setDescricao(a.getDescricao());      
-        current.setIdProcessoOriginal(a);
-        associate();
-        recreatePagination();
-        recreateModel();
-        return "Associate";
-    }
+    
 
     public String prepareEdit() {
         current = (Processo) getItems().getRowData();
