@@ -11,40 +11,80 @@
             <h:outputText value="#{bundle.ViewProcessoTitle}"></h:outputText>
         </ui:define>
         <ui:define name="content">
-            <h:panelGroup id="messagePanel" layout="block">
-                <h:messages errorStyle="color: red" infoStyle="color: green" layout="table"/>
-                <br />
-            </h:panelGroup>
-             <h:form>                
-                <div  align="right" class="btn-group float-right">
-                    <h:button class="btn btn-dark btn-sm" outcome="Edit" value="#{bundle.ViewProcessoEditLink}"/>
-                    <h:commandButton class="btn btn-danger btn-sm"  value="#{bundle.ViewProcessoDestroyLink}" action="#{processoController.destroyAndView}"/>
-                 </div>
-                <br />
-                <br />
+           <br/>
+            <div class="col-md-12">
+                <div class="btn-group right">
+                    <h:form>
+                        <h:commandButton class="btn btn-secondary" action="Edit" value="Editar"/>
+                    </h:form>
+                    <button class="btn btn-danger" data-toggle="modal" data-target="#exampleModal"><span>Apagar</span></button>
+                </div>
+                <br/>
+                <br/>
+                
+                
+                <div class="table" style="margin-top:1%;     box-shadow: 0 2px 4px 0 rgba(0,0,0,0.16),0 2px 10px 0 rgba(0,0,0,0.12)!important;">
+                
+                <div class="row" style="border-bottom: 1px solid black;">
+                    
+                        <div class="col-md-2"><b>Nome:</b></div>
+                        <div class="col-md-8" style="border-left: 1px solid black;">#{processoController.selected.nome}</div>
+                </div>
+                    
+                    <div class="row" style="border-bottom: 1px solid black;">
+                        <div class="col-md-2"><b>Descrição:</b></div>
+                        <div class="col-md-8" style="border-left: 1px solid black;">#{processoController.selected.descricao}</div>
+                    </div>
+                    
+                    <div class="row" style="border-bottom: 1px solid black;">
+                        <div class="col-md-2"><b>Utilizador:</b></div>
+                        <div class="col-md-8" style="border-left: 1px solid black;">#{processoController.selected.utilizadoridUtilizador}</div>
+                    </div>
+                                                     
+                    <div class="row" style="border-bottom: 1px solid black;">
+                        <div class="col-md-2"><b>idProcesso:</b></div>
+                        <div class="col-md-8" style="border-left: 1px solid black;">#{processoController.selected.idProcesso}</div>
+                    </div>
 
-                <h:panelGrid columns="1">
-                    <h:outputText value="#{bundle.ViewProcessoLabel_idProcesso}"/>
-                    <h:outputText value="#{processoController.selected.idProcesso}" title="#{bundle.ViewProcessoTitle_idProcesso}"/>
-                    </h:panelGrid>
-                <br />
-                <h:panelGrid columns="1">
-                    <h:outputText value="#{bundle.ViewProcessoLabel_nome}"/>
-                    <h:outputText value="#{processoController.selected.nome}" title="#{bundle.ViewProcessoTitle_nome}"/>
-                    </h:panelGrid>
-                <br />
-                <h:panelGrid columns="1">
-                    <h:outputText value="#{bundle.ViewProcessoLabel_descricao}"/>
-                    <h:outputText value="#{processoController.selected.descricao}" title="#{bundle.ViewProcessoTitle_descricao}"/>
-                    </h:panelGrid>
-                <br />
-                <h:panelGrid columns="1">
-                    <h:outputText value="#{bundle.ViewProcessoLabel_utilizadoridUtilizador}"/>
-                    <h:outputText value="#{processoController.selected.utilizadoridUtilizador}" title="#{bundle.ViewProcessoTitle_utilizadoridUtilizador}"/>
-                </h:panelGrid>               
-                <br />
-                <h:commandLink action="#{processoController.prepareList}" value="#{bundle.ViewProcessoShowAllLink}" immediate="true"/>
-            </h:form>
+                     <br></br>
+                    
+                    </div>
+   
+                </div>
+               
+                    
+
+
+
+
+            <br/>
+
+            <div class="modal fade"  id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Apagar o Processo?</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <p>Pretende apagar este Processo?</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                            <h:form>
+                                <h:commandButton class="btn btn-primary" action="#{processoController.destroyAndView}" value="Apagar"/>
+                            </h:form>
+                        </div>
+                        
+                        
+                        
+                    </div>
+                </div>
+            </div>
+           
+
         </ui:define>
     </ui:composition>
 
