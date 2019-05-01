@@ -209,8 +209,8 @@ public class AtividadeController implements Serializable {
 
     public String destroyActivities() {
         prepareSelectedList();
-        for (int i = 0; i < activitiesOnList.size(); i++) {
-            destroyAtividade(activitiesOnList.get(i));
+        for (int i = 0; i < ativitidadesOnList.size(); i++) {
+            destroyAtividade(ativitidadesOnList.get(i));
         }
         return "List";
     }
