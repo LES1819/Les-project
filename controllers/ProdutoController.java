@@ -80,6 +80,12 @@ public class ProdutoController implements Serializable {
     }
 
     public String create() {
+        Date date = new Date();
+        Utilizador autor = new Utilizador(1);
+        current.setUtilizadoridUtilizador(autor);
+        current.setDataCriacao(date);
+        recreatePagination();
+        recreateModel();
         try {
             getFacade().create(current);
             JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/resources/Bundle").getString("ProdutoCreated"));
@@ -90,6 +96,10 @@ public class ProdutoController implements Serializable {
         }
     }
 
+      public String prepareUpdate(){
+        return update();
+    }
+    
     public String prepareEdit() {
         current = (Produto) getItems().getRowData();
         selectedItemIndex = pagination.getPageFirstItem() + getItems().getRowIndex();
@@ -97,6 +107,8 @@ public class ProdutoController implements Serializable {
     }
 
     public String update() {
+        recreatePagination();
+        recreateModel();
         try {
             getFacade().edit(current);
             JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/resources/Bundle").getString("ProdutoUpdated"));
