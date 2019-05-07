@@ -28,6 +28,8 @@ and open the template in the editor.
     color: white;  
     border: 0px solid rgb(39, 44, 49);
 }
+
+
 .br-menu{
     border-bottom: 1px solid rgb(100, 100, 100);
     margin-bottom : 5px;
@@ -161,14 +163,28 @@ td,tr{
 .row{
     margin-left: 0px;
     margin-right: 0px;
+    margin-top: 2%;
+}
+
+.row.tabela{
+margin-top: 1%;
+width: 100%;
 }
 
 .anda_esquerda{
     padding-left: 12.7%;
 }
+
+.col-md-2 {
+    text-align: left;
+    padding-left: 15px;
+}
+
 .dropdown-toggle::before {
     display:none;
 }
+
+
 .desc{
     width:80%
 }
@@ -188,4 +204,12 @@ td,tr{
 
 .zero-left-padding{
     padding-left:0px;
+}
+
+#inputDescricao {
+    height: 100%
+}
+
+.width{
+    width: 75%;
 }
