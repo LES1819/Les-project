@@ -38,13 +38,13 @@
                        
                         
                         <h:button class="check btn btn-danger" outcome="/processo/List" value="Cancelar"/>
-                        <h:commandButton type="submit" class="check btn btn-secondary" value="Registar" action="#{processoController.create()}" />
+                        <h:commandButton type="submit" class="btn btn-primary" value="Registar" action="#{processoController.create()}" />
                     </div>
                     
                 </h:form>
-               
+                <h:button outcome="#{atividadeController.prepareAssociate()}" style="margin-left:2%;height: 8%;margin-top: 0.5%;" value="Associar Atividades"/>
             </div>
         </ui:define>
     </ui:composition>
-<h:button outcome="#{atividadeController.prepareAssociate()}" style="margin-left:2%;height: 8%;margin-top: 0.5%;" value="Associar Atividades"/>
+
 </html>
