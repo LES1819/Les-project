@@ -38,9 +38,28 @@ public class AtividadeFacade extends AbstractFacade<Atividade> {
         return getOriginal().size();
     }
     
-    public void destroyAtividade(Atividade atividade){
+   public void auxiliarDestroy(Atividade atividade){
         em.createNamedQuery("Atividade.destroyAssociatedPapers").setParameter("atividade",atividade);
         em.createNamedQuery("Atividade.destroyAssociatedPatterns").setParameter("atividade",atividade);
         em.createNamedQuery("Atividade.destroyAssociatedProducts").setParameter("atividade",atividade);
+    }
+    
+    public void destroyAtividade(Atividade atividade){
+        List<Atividade> isCopies = em.createNamedQuery("Atividade.isCopy").setParameter("atividade",atividade.getIdAtividades()).getResultList();
+        if(isCopies.size() > 0){ // is copy
+           // System.out.println("is copy");
+           // System.out.println(isCopies);
+            auxiliarDestroy(atividade);
+        }
+        else{ // is original
+          //  System.out.println("original");
+            auxiliarDestroy(atividade);
+            List<Atividade> copies = em.createNamedQuery("Atividade.getCopies").setParameter("atividade", atividade).getResultList();
+            for(Atividade copy : copies){
+                auxiliarDestroy(copy);
+                em.remove(copy);
+            }
+        }
+
     }
 }
