@@ -13,50 +13,44 @@
         <ui:define name="content">
            <br/>
             <div class="col-md-12">
-                <div class="btn-group right">
-                    <h:form>
-                        <h:commandButton class="btn btn-secondary" action="Edit" value="Editar"/>
-                    </h:form>
-                    <button class="btn btn-danger" data-toggle="modal" data-target="#exampleModal"><span>Apagar</span></button>
-                </div>
+                
                 <br/>
                 <br/>
                 
                 
-                <div class="table"> <!--por mudar -->
-                
-                <div class="row">
-                    
-                        <div class="col-md-2"><b>Nome:</b></div>
-                        <div class="col-md-8">#{processoController.selected.nome}</div>
-                </div>
-                    
-                    <div class="row" style="border-bottom: 1px solid black;">
-                        <div class="col-md-2"><b>Descrição:</b></div>
-                        <div class="col-md-8">#{processoController.selected.descricao}</div>
-                    </div>
-                    
-                    <div class="row" style="border-bottom: 1px solid black;">
-                        <div class="col-md-2"><b>Utilizador:</b></div>
-                        <div class="col-md-8">#{processoController.selected.utilizadoridUtilizador}</div>
-                    </div>
-                                                     
-                    <div class="row" style="border-bottom: 1px solid black;">
-                        <div class="col-md-2"><b>idProcesso:</b></div>
-                        <div class="col-md-8">#{processoController.selected.idProcesso}</div>
-                    </div>
+               
+                      
+                    <dl class="row">
+                          <dt class="col-sm-3">Nome</dt>
+                          <dd class="col-sm-9">#{processoController.selected.nome}</dd>
 
+                          <dt class="col-sm-3">Descrição</dt>
+                          <dd class="col-sm-9">
+                            #{processoController.selected.descricao}
+                          </dd>
+
+                          <dt class="col-sm-3">id do Utilizador</dt>
+                          <dd class="col-sm-9">#{processoController.selected.utilizadoridUtilizador}</dd>
+
+                          <dt class="col-sm-3 text-truncate">id do Processo</dt>
+                          <dd class="col-sm-9">#{processoController.selected.idProcesso}</dd>
+
+                        </dl>
+
+
+                           
                      <br></br>
                     
                     </div>
    
+                <div class="btn-group right">
+                    <h:form>
+                        <h:commandButton class="btn btn-primary" action="Edit" value="Editar"/>
+                    </h:form>
+                    <button class="btn btn-danger" data-toggle="modal" data-target="#exampleModal"><span>Apagar</span></button>
                 </div>
                
                     
-
-
-
-
             <br/>
 
             <div class="modal fade"  id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -74,7 +68,7 @@
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
                             <h:form>
-                                <h:commandButton class="btn btn-primary" action="#{processoController.destroyAndView}" value="Apagar"/>
+                                <h:commandButton class="btn btn-danger" action="#{processoController.destroyAndView}" value="Apagar"/>
                             </h:form>
                         </div>
                         
