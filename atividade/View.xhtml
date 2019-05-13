@@ -54,8 +54,9 @@
                     <div class="row" style="border-bottom: 1px solid black; border-top: 1px solid black;">
                         <div class="col-md-2"><b>Papéis</b></div>
                         <div class="col-md-8" style="border-left: 1px solid black;">
-                       <ui:repeat value="#{papelhasAtividadeController.getAssociatedPapers(atividadeController.selected)}" var="item2">
-                           <span>#{item2.getPapel().nome},</span>
+                       <ui:repeat value="#{papelhasAtividadeController.getAssociatedPapers(atividadeController.selected)}" var="item2" varStatus="status">
+                           <h:outputText value="#{item2.getPapel().nome}, " rendered="#{!status.last}" />
+                           <h:outputText value="#{item2.getPapel().nome}"  rendered="#{status.last}"/>  
                         </ui:repeat>
                         </div>
      
@@ -64,8 +65,9 @@
                 <div class="row" style="border-bottom: 1px solid black;">
                         <div class="col-md-2"><b>Produtos</b></div>
                         <div class="col-md-8" style="border-left: 1px solid black;">
-                       <ui:repeat value="#{produtohasAtividadeController.getAssociatedProducts(atividadeController.selected)}" var="item3">
-                           <span>#{item3.getProduto().nome},</span>
+                       <ui:repeat value="#{produtohasAtividadeController.getAssociatedProducts(atividadeController.selected)}" var="item3" varStatus="status">
+                           <h:outputText value="#{item3.getProduto().nome}, " rendered="#{!status.last}" />
+                           <h:outputText value="#{item3.getProduto().nome}"  rendered="#{status.last}"/>  
                         </ui:repeat>
                         </div>
      
@@ -74,8 +76,9 @@
                 <div class="row" style="border-bottom: 1px solid black;">
                         <div class="col-md-2"><b>Padrões</b></div>
                         <div class="col-md-8" style="border-left: 1px solid black;">
-                       <ui:repeat value="#{atividadehasPadraoController.getAssociatedPatterns(atividadeController.selected)}" var="item4">
-                           <span>#{item4.getPadrao().nome},</span>
+                       <ui:repeat value="#{atividadehasPadraoController.getAssociatedPatterns(atividadeController.selected)}" var="item4" varStatus="status">
+                           <h:outputText value="#{item4.getPadrao().nome}, " rendered="#{!status.last}" />
+                           <h:outputText value="#{item4.getPadrao().nome}"  rendered="#{status.last}"/> 
                         </ui:repeat>
                         </div>
      
