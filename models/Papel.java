@@ -40,6 +40,7 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Papel.findByIdPapel", query = "SELECT p FROM Papel p WHERE p.idPapel = :idPapel"),
     @NamedQuery(name = "Papel.findByNome", query = "SELECT p FROM Papel p WHERE p.nome = :nome"),
     @NamedQuery(name = "Papel.findByDescricao", query = "SELECT p FROM Papel p WHERE p.descricao = :descricao"),
+    @NamedQuery(name = "Papel.destroyAssociatedAtividade", query ="DELETE FROM PapelhasAtividade p WHERE p.papel = :papel"),
     @NamedQuery(name = "Papel.findByDataCriacao", query = "SELECT p FROM Papel p WHERE p.dataCriacao = :dataCriacao")})
 public class Papel implements Serializable {
 
