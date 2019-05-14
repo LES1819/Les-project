@@ -33,4 +33,12 @@ public class PapelFacade extends AbstractFacade<Papel> {
         em.createNamedQuery("Papel.destroyAssociatedAtividade").setParameter("papel", papel);
 }
     
+        public List getNotAssociated() {
+        return em.createNamedQuery("Papel.notAssociated").getResultList();
+    }
+    
+    public int countNotAssociate() {
+        return getNotAssociated().size();
+    }
+    
 }
