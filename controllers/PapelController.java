@@ -47,12 +47,12 @@ public class PapelController implements Serializable {
     
     public PapelController() {
         // map for selected stuff on the JSF page
-        selectedItems = new HashMap<>();
+        selectedItems = new HashMap<Papel, Boolean>();
         papersOnList = new ArrayList<>();
     }
     
      private void prepareSelectedList() {
-        papersOnList = new ArrayList<>();
+        papersOnList = new ArrayList<Papel>();
         for(Papel p : selectedItems.keySet()) {
             if (selectedItems.get(p) == true) {
                 papersOnList.add(p);
@@ -206,7 +206,12 @@ public class PapelController implements Serializable {
         return "Edit";
     }
     
-
+    public void associateSelectedList(){
+        prepareSelectedList();
+        for(Papel p: papeisOnList){
+            prepareDestroy(p);
+        }
+    }
 
     public String update() {
         recreatePagination();
@@ -219,6 +224,11 @@ public class PapelController implements Serializable {
             JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/resources/Bundle").getString("PersistenceErrorOccured"));
             return null;
         }
+    }
+    
+    public void prepareDestroy(Papel p){
+        current = p;
+        destroyAndList();
     }
     
     public String nextNotAssociated() {
@@ -259,9 +269,35 @@ public class PapelController implements Serializable {
             return "List";
         }
     }
+    
+    public String destroyAndList() {
+        performDestroyFull();
+        recreateModel();
+        updateCurrentItem();
+        recreateModel();
+        return "List";
+        
+    }
 
     private void performDestroy() {
         try {
+            getFacade().remove(current);
+            JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/resources/Bundle").getString("PapelDeleted"));
+        } catch (Exception e) {
+            JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/resources/Bundle").getString("PersistenceErrorOccured"));
+        }
+    }
+    
+    public void destroyPapel(Papel a) {
+        current = a;
+        performDestroyFull();
+        recreatePagination();
+        recreateModel();
+    }
+    
+    private void performDestroyFull() {
+        try {
+            getFacade().destroyPapel(current);
             getFacade().remove(current);
             JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/resources/Bundle").getString("PapelDeleted"));
         } catch (Exception e) {
