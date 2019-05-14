@@ -90,18 +90,18 @@ public class AtividadeController implements Serializable {
         return pagination;
     }
     
-    public PaginationHelper getOriginalPagination() {
+    public PaginationHelper getOriginalPagination(int pid) {
         if (pagination == null) {
-            pagination = new PaginationHelper(10) {
+            pagination = new PaginationHelper(6) {
 
                 @Override
                 public int getItemsCount() {
-                    return getFacade().countOriginal();
+                    return getFacade().countOriginal(pid);
                 }
 
                 @Override
                 public DataModel createPageDataModel() {
-                    return new ListDataModel(getFacade().getOriginal());
+                    return new ListDataModel(getFacade().getOriginal(pid));
                 }
                 
             };
@@ -286,11 +286,11 @@ public class AtividadeController implements Serializable {
         return items;
     }
     
-    public DataModel getOriginalItems(){
+    public DataModel getOriginalItems(int pid){
         recreatePagination();
         recreateModel();
         if(items == null) {
-            items = getOriginalPagination().createPageDataModel();
+            items = getOriginalPagination(pid).createPageDataModel();
         }
         return items;
     }
@@ -311,6 +311,18 @@ public class AtividadeController implements Serializable {
 
     public String previous() {
         getPagination().previousPage();
+        recreateModel();
+        return "List";
+    }
+    
+    public String nextOriginal(int pid) {
+        getOriginalPagination(pid).nextPage();
+        recreateModel();
+        return "List";
+    }
+
+    public String previousOriginal(int pid) {
+        getOriginalPagination(pid).previousPage();
         recreateModel();
         return "List";
     }
