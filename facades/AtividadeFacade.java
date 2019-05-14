@@ -29,13 +29,13 @@ public class AtividadeFacade extends AbstractFacade<Atividade> {
     public AtividadeFacade() {
         super(Atividade.class);
     }
+        
+    public List getOriginal(int pid){
+        return em.createNamedQuery("Atividade.findOriginal").setParameter("param", pid).getResultList();
+    }    
     
-    public List getOriginal(){
-        return em.createNamedQuery("Atividade.findOriginal").getResultList();
-    }
-    
-    public int countOriginal(){
-        return getOriginal().size();
+    public int countOriginal(int pid) {
+        return getOriginal(pid).size();
     }
     
    public void auxiliarDestroy(Atividade atividade){
