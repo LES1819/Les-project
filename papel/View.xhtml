@@ -1,48 +1,103 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-      xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:f="http://xmlns.jcp.org/jsf/core">
+<xhtml xmlns="http://www.w3.org/1999/xhtml"
+       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+       xmlns:h="http://xmlns.jcp.org/jsf/html"
+       xmlns:f="http://xmlns.jcp.org/jsf/core">
 
     <ui:composition template="/template.xhtml">
         <ui:define name="title">
             <h:outputText value="#{bundle.ViewPapelTitle}"></h:outputText>
         </ui:define>
-        <ui:define name="body">
-            <h:panelGroup id="messagePanel" layout="block">
-                <h:messages errorStyle="color: red" infoStyle="color: green" layout="table"/>
-            </h:panelGroup>
-            <h:form>
-                <h:panelGrid columns="2">
-                    <h:outputText value="#{bundle.ViewPapelLabel_idPapel}"/>
-                    <h:outputText value="#{papelController.selected.idPapel}" title="#{bundle.ViewPapelTitle_idPapel}"/>
-                    <h:outputText value="#{bundle.ViewPapelLabel_nome}"/>
-                    <h:outputText value="#{papelController.selected.nome}" title="#{bundle.ViewPapelTitle_nome}"/>
-                    <h:outputText value="#{bundle.ViewPapelLabel_descricao}"/>
-                    <h:outputText value="#{papelController.selected.descricao}" title="#{bundle.ViewPapelTitle_descricao}"/>
-                    <h:outputText value="#{bundle.ViewPapelLabel_dataCriacao}"/>
-                    <h:outputText value="#{papelController.selected.dataCriacao}" title="#{bundle.ViewPapelTitle_dataCriacao}">
-                        <f:convertDateTime pattern="MM/dd/yyyy HH:mm:ss" />
-                    </h:outputText>
-                    <h:outputText value="#{bundle.ViewPapelLabel_utilizadoridUtilizador}"/>
-                    <h:outputText value="#{papelController.selected.utilizadoridUtilizador}" title="#{bundle.ViewPapelTitle_utilizadoridUtilizador}"/>
-                </h:panelGrid>
-                <br />
-                <h:commandLink action="#{papelController.destroyAndView}" value="#{bundle.ViewPapelDestroyLink}"/>
-                <br />
-                <br />
-                <h:link outcome="Edit" value="#{bundle.ViewPapelEditLink}"/>
-                <br />
-                <h:commandLink action="#{papelController.prepareCreate}" value="#{bundle.ViewPapelCreateLink}" />
-                <br />
-                <h:commandLink action="#{papelController.prepareList}" value="#{bundle.ViewPapelShowAllLink}"/>
-                <br />
-                <br />
-                <h:link outcome="/index" value="#{bundle.ViewPapelIndexLink}"/>
+        <ui:define name="content">
 
-            </h:form>
+            <div class="row">
+                <div class="col-md-12">
+                    <br />
+                    <div class="row">
+                        <div class="col-6">
+                            <h:link outcome="/papel/List" value="Lista de papeis"></h:link> -> <u>Papel</u>
+                        </div>
+
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+
+                            <div class="col-md-2" style="float:right;">
+                                <div class="btn-group right">
+                                    <h:form>
+                                        <h:commandButton class="btn btn-secondary" action="#{papelController.prepareEdit()}" value="Editar"/>
+                                    </h:form>
+                                    <button class="btn btn-danger"  data-toggle="modal" data-target="#exampleModal"><span>Apagar</span></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br/>
+                    <br/>                    
+
+                    <h:dataTable class="table" border="0" cellpadding="2" cellspacing="0" style="margin-top:1%; width: 78%; box-shadow: 0 2px 4px 0 rgba(0,0,0,0.16),0 2px 10px 0 rgba(0,0,0,0.12)!important;">                                        
+
+                        <f:facet name="header">
+                            <h:outputText value="#{bundle.ListPapelTitle_nome}:"/>
+                            <h:outputText style="padding-left: 5%" value="#{papelController.selected.nome}"/>
+                        </f:facet>   
+                    </h:dataTable> 
+                    <h:dataTable class="table" border="0" cellpadding="2" cellspacing="0" style="margin-top:1%; width: 78%; box-shadow: 0 2px 4px 0 rgba(0,0,0,0.16),0 2px 10px 0 rgba(0,0,0,0.12)!important;">                                                
+                        <f:facet name="header">
+                            <h:outputText value="#{bundle.ListPapelTitle_descricao}:"/>
+                            <h:outputText style="padding-left: 5%" value="#{papelController.selected.descricao}"/>
+                        </f:facet>
+                    </h:dataTable> 
+                    <h:dataTable class="table" border="0" cellpadding="2" cellspacing="0" style="margin-top:1%; width: 78%; box-shadow: 0 2px 4px 0 rgba(0,0,0,0.16),0 2px 10px 0 rgba(0,0,0,0.12)!important;">                                                                     
+                        <f:facet name="header">
+                            <h:outputText value="Criado por:"/>                           
+                            <h:outputText style="padding-left: 5%" value="#{papelController.selected.utilizadoridUtilizador.nomeCompleto} (#{papelController.selected.utilizadoridUtilizador.idUtilizador})">
+                                <f:convertDateTime pattern="MM/dd/yyyy HH:mm:ss" />
+                            </h:outputText>                           
+                        </f:facet>                                                                                                                                                                            
+                    </h:dataTable>
+                    <h:dataTable class="table" border="0" cellpadding="2" cellspacing="0" style="margin-top:1%; width: 78%; box-shadow: 0 2px 4px 0 rgba(0,0,0,0.16),0 2px 10px 0 rgba(0,0,0,0.12)!important;">                                                
+                        <f:facet name="header">
+                            <h:outputText value="Data de criação:"/>
+                            <h:outputText style="padding-left: 5%" value="#{papelController.selected.dataCriacao}">
+                                <f:convertDateTime pattern="MM/dd/yyyy HH:mm:ss" />
+                            </h:outputText>
+                        </f:facet>                                                    
+
+                    </h:dataTable>                               
+
+                </div>
+            </div>
+            <br/>
+            <div class="modal fade"  id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Apagar o Papel?</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <p>Pretende apagar este Papel? Irá apagar as associações do mesma a Atividades.</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                            <h:form>
+                                <h:commandButton class="btn btn-primary" action="#{papelController.destroyAndList()}" value="Apagar"/>
+                            </h:form>
+                        </div>
+
+
+
+                    </div>
+                </div>
+            </div>
+
+
+
         </ui:define>
     </ui:composition>
 
-</html>
+</xhtml>
