@@ -5,7 +5,6 @@
  */
 package jpa.session;
 
-import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -13,12 +12,12 @@ import jpa.entities.Processo;
 
 /**
  *
- * @author diogo
+ * @author paulosrh
  */
 @Stateless
 public class ProcessoFacade extends AbstractFacade<Processo> {
 
-    @PersistenceContext(unitName = "lesPU")
+    @PersistenceContext(unitName = "les_testePU")
     private EntityManager em;
 
     @Override
@@ -30,15 +29,7 @@ public class ProcessoFacade extends AbstractFacade<Processo> {
         super(Processo.class);
     }
     
-      public List getOriginal(){
-        return em.createNamedQuery("Processo.findOriginal").getResultList();
-    }
-    
-    public int countOriginal(){
-        return getOriginal().size();
-    }
-
     public void destroyProcesso(Processo processo){
-        em.createNamedQuery("Processo.destroyAssociatedActivities").setParameter("processo",processo);     
+        em.createNamedQuery("Atividade.destroyAssociatedProcesso").setParameter("processo",processo);     
     }
 }

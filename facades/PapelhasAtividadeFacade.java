@@ -19,7 +19,7 @@ import jpa.entities.PapelhasAtividade;
 @Stateless
 public class PapelhasAtividadeFacade extends AbstractFacade<PapelhasAtividade> {
 
-    @PersistenceContext(unitName = "lesPU")
+    @PersistenceContext(unitName = "les_testePU")
     private EntityManager em;
 
     @Override

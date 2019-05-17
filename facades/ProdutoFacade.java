@@ -9,15 +9,14 @@ import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import jpa.entities.Atividade;
-import jpa.entities.ProdutohasAtividade;
+import jpa.entities.Produto;
 
 /**
  *
- * @author andre
+ * @author tiago
  */
 @Stateless
-public class ProdutohasAtividadeFacade extends AbstractFacade<ProdutohasAtividade> {
+public class ProdutoFacade extends AbstractFacade<Produto> {
 
     @PersistenceContext(unitName = "les_testePU")
     private EntityManager em;
@@ -27,16 +26,21 @@ public class ProdutohasAtividadeFacade extends AbstractFacade<ProdutohasAtividad
         return em;
     }
 
-    public ProdutohasAtividadeFacade() {
-        super(ProdutohasAtividade.class);
+    public ProdutoFacade() {
+        super(Produto.class);
     }
     
-    public List getAssociatedProducts(Atividade atividade){
-        return em.createNamedQuery("ProdutohasAtividade.associatedProducts").setParameter("atividade",atividade).getResultList();
+    public List getNotAssociated() {
+        return em.createNamedQuery("Produto.notAssociated").getResultList();
     }
     
-    public int countAssociatedProducts(Atividade atividade) {
-        return getAssociatedProducts(atividade).size();
+    public int countNotAssociate() {
+        return getNotAssociated().size();
     }
     
+    /*novo*/
+    public void destroyProduto(Produto produto){
+        em.createNamedQuery("Produto.destroyAssociations").setParameter("produto",produto);
+    }
+    /*novo*/
 }

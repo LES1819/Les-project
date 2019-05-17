@@ -18,7 +18,7 @@ import jpa.entities.Atividade;
 @Stateless
 public class AtividadeFacade extends AbstractFacade<Atividade> {
 
-    @PersistenceContext(unitName = "lesPU")
+    @PersistenceContext(unitName = "les_testePU")
     private EntityManager em;
 
     @Override
@@ -47,9 +47,10 @@ public class AtividadeFacade extends AbstractFacade<Atividade> {
     public void destroyAtividade(Atividade atividade){
         List<Atividade> isCopies = em.createNamedQuery("Atividade.isCopy").setParameter("atividade",atividade.getIdAtividades()).getResultList();
         if(isCopies.size() > 0){ // is copy
-           // System.out.println("is copy");
+            System.out.println("is copy");
            // System.out.println(isCopies);
             auxiliarDestroy(atividade);
+            em.createNamedQuery("Atividade.setIdOriginalNull").setParameter("atividade",atividade.getIdAtividades());
         }
         else{ // is original
           //  System.out.println("original");
@@ -57,6 +58,7 @@ public class AtividadeFacade extends AbstractFacade<Atividade> {
             List<Atividade> copies = em.createNamedQuery("Atividade.getCopies").setParameter("atividade", atividade).getResultList();
             for(Atividade copy : copies){
                 auxiliarDestroy(copy);
+                em.createNamedQuery("Atividade.setIdOriginalNull").setParameter("atividade",copy.getIdAtividades());
                 em.remove(copy);
             }
         }

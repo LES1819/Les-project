@@ -19,7 +19,7 @@ import jpa.entities.AtividadehasPadrao;
 @Stateless
 public class AtividadehasPadraoFacade extends AbstractFacade<AtividadehasPadrao> {
 
-    @PersistenceContext(unitName = "lesPU")
+    @PersistenceContext(unitName = "les_testePU")
     private EntityManager em;
 
     @Override

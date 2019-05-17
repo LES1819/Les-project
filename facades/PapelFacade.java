@@ -5,6 +5,7 @@
  */
 package jpa.session;
 
+import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -17,13 +18,14 @@ import jpa.entities.Papel;
 @Stateless
 public class PapelFacade extends AbstractFacade<Papel> {
 
-    @PersistenceContext(unitName = "LES_Project_v2PU")
+    @PersistenceContext(unitName = "les_testePU")
     private EntityManager em;
 
     @Override
     protected EntityManager getEntityManager() {
         return em;
     }
+
 
     public PapelFacade() {
         super(Papel.class);
@@ -33,7 +35,7 @@ public class PapelFacade extends AbstractFacade<Papel> {
         em.createNamedQuery("Papel.destroyAssociatedAtividade").setParameter("papel", papel);
 }
     
-        public List getNotAssociated() {
+    public List getNotAssociated() {
         return em.createNamedQuery("Papel.notAssociated").getResultList();
     }
     
