@@ -40,7 +40,7 @@
 
                                             </div>
                                         </div>
-                                        <h:commandButton type="submit" class="btn btn-primary" value="Apagar" action="#{papelController.associateSelectedList()}" disabled="false"/>                                   
+                                        <h:commandButton type="submit" class="btn btn-primary" value="Apagar" action="#{papelController.destroySelectedList()}" disabled="false"/>                                   
                                     </div>                      
                                 </div>
                             </div>
@@ -56,9 +56,9 @@
                     <h:dataTable class="table" value="#{papelController.items}" var="item" border="0" cellpadding="2" cellspacing="0" rowClasses="jsfcrud_odd_row,jsfcrud_even_row" rules="all"  style="margin-top:1%; width: 78%; box-shadow: 0 2px 4px 0 rgba(0,0,0,0.16),0 2px 10px 0 rgba(0,0,0,0.12)!important;">                  
                         <h:column>
                                         <f:facet name="header">
-                                            <h:selectBooleanCheckbox onclick="toggleAll(); enableButton();"></h:selectBooleanCheckbox>
+                                            <h:selectBooleanCheckbox onclick="toggleAll(); enableAssociate();"></h:selectBooleanCheckbox>
                                         </f:facet>                                      
-                                        <h:selectBooleanCheckbox class="check[]" onclick="enableButton();" value="#{papelController.selectedItems[item]}"></h:selectBooleanCheckbox>
+                                        <h:selectBooleanCheckbox class="check[]" onclick="enableAssociate();" value="#{papelController.selectedItems[item]}"></h:selectBooleanCheckbox>
                                     </h:column>
                         <h:column>
                             <f:facet name="header">
