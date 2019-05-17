@@ -11,22 +11,22 @@
             <h:outputText value="#{bundle.EditProcessoTitle}"></h:outputText>
         </ui:define>
         <ui:define name="content">
-            <div class="row">
+            <div class="row" style="margin-top: 2%;">
                 <h2>#{bundle.EditProcessoTitle}</h2>
             </div>
-            <div class="row tabela">
-                <h:form class="width">
+            <div class="row tabela" style="margin-top:1%">
+                <h:form style="width:100%;">
                     <h:messages errorStyle="color: red" infoStyle="color: green" layout="table"/>
             
                     <div class="row form-group row ajustar_caixas2">
-                        <h:outputLabel value="#{bundle.EditProcessoLabel_nome} (Obrigatório)" for="StaticText" class="col-md-2"/>
+                        <h:outputLabel value="#{bundle.EditProcessoLabel_nome} (Obrigatório)" for="StaticText" class="col-md-2" style="text-align: left;padding-left: 15px;" />
                         <div class="col desc">
                             <h:inputText class="form-control" id="StaticText" value="#{processoController.selected.nome}"  title="#{bundle.EditProcessoTitle_nome}" a:placeholder="Insira Nome aqui" required="true" />
                         </div>
                         </div>
                   
                    <div class=" row form-group row ajustar_caixas2" style="height: 60%">
-                       <h:outputLabel for="inputDescricao" value="Descrição:" class="col-md-2"/>
+                       <h:outputLabel for="inputDescricao" value="Descrição:" style="text-align: left;padding-left: 15px;" class="col-md-2"/>
                         <div class="col desc"  style="height: 100%">
                             <h:inputTextarea class="form-control" style="height: 100%" id="inputDescricao" rows="3" value="#{processoController.selected.descricao}" a:placeholder="Insira a Descrição aqui"/>
                         </div>
@@ -34,15 +34,15 @@
                     </div>                    
 
                     
-                    <div class="btn-group right">
+                    <div class="row">
                        
                         
-                        <h:button class="check btn btn-danger" outcome="/processo/List" value="Cancelar"/>
-                        <h:commandButton type="submit" class="btn btn-primary"  value="Editar" action="#{processoController.update()}" />
+                        <h:button class="btn btn-primary" outcome="/processo/List" value="Cancelar" style="position: absolute; right: 140px"/>
+                        <h:commandButton type="submit" class="btn btn-primary" style="position: absolute; right: 20px;" value="Editar" action="#{processoController.update()}" />
                     </div>
                     
                 </h:form>
-              
+                <h:button outcome="#{atividadeController.prepareAssociate(processoController.selected.idProcesso)}" style="margin-left:2%;height: 8%;margin-top: 0.5%;" value="Associar Atividades"/>
             </div>
         </ui:define>
     </ui:composition>

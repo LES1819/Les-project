@@ -27,8 +27,8 @@
 
                         <div class="row">
                             <div class="col-12">
-                                <h:commandLink action="#{atividadeController.previousOriginal(1)}" value="#{bundle.Previous} #{atividadeController.getOriginalPagination(1).pageSize}" rendered="#{atividadeController.getOriginalPagination(1).hasPreviousPage}"/>&nbsp;
-                                <h:commandLink action="#{atividadeController.nextOriginal(1)}" value="#{bundle.Next} #{atividadeController.getOriginalPagination(1).pageSize}" rendered="#{atividadeController.getOriginalPagination(1).hasNextPage}"/>&nbsp;    
+                                <h:commandLink action="#{atividadeController.previousOriginal(atividadeController.selected.processoidProcesso.idProcesso)}" value="#{bundle.Previous} #{atividadeController.getOriginalPagination(atividadeController.selected.processoidProcesso.idProcesso).pageSize}" rendered="#{atividadeController.getOriginalPagination(atividadeController.selected.processoidProcesso.idProcesso).hasPreviousPage}"/>&nbsp;
+                                <h:commandLink action="#{atividadeController.nextOriginal(atividadeController.selected.processoidProcesso.idProcesso)}" value="#{bundle.Next} #{atividadeController.getOriginalPagination(atividadeController.selected.processoidProcesso.idProcesso).pageSize}" rendered="#{atividadeController.getOriginalPagination(atividadeController.selected.processoidProcesso.idProcesso).hasNextPage}"/>&nbsp;    
                                 
                                 <div class="col-md-2" style="float:right;">
 
@@ -51,19 +51,19 @@
                                 </div>
                             </div>
                         </div>
-                        <h:outputText value="#{atividadeController.getOriginalPagination(1).pageFirstItem + 1}..#{atividadeController.getOriginalPagination(1).pageLastItem + 1}/#{atividadeController.getOriginalPagination(1).itemsCount}"/>&nbsp;                                
+                        <h:outputText value="#{atividadeController.getOriginalPagination(atividadeController.selected.processoidProcesso.idProcesso).pageFirstItem + 1}..#{atividadeController.getOriginalPagination(atividadeController.selected.processoidProcesso.idProcesso).pageLastItem + 1}/#{atividadeController.getOriginalPagination(atividadeController.selected.processoidProcesso.idProcesso).itemsCount}"/>&nbsp;                                
                         <div class="tabela" style="margin-top:1%; width: 78%; box-shadow: 0 2px 4px 0 rgba(0,0,0,0.16),0 2px 10px 0 rgba(0,0,0,0.12)!important;">                                                                   
                             <h:panelGroup id="messagePanel" layout="block">
                                 <h:messages errorStyle="color: red" infoStyle="color: green" layout="table"/>
                             </h:panelGroup>
-                            <h:outputText escape="false" value="#{bundle.ListAtividadeEmpty}" rendered="#{atividadeController.getOriginalItems(1).rowCount == 0}"/>
-                            <h:panelGroup rendered="#{atividadeController.getOriginalItems(1).rowCount > 0}">                                                                                                
-                                <h:dataTable class="table" value="#{atividadeController.getOriginalItems(1)}" var="item" border="0" cellpadding="2" cellspacing="0" rowClasses="jsfcrud_odd_row,jsfcrud_even_row" rules="all" style="border: 1px solid;">
+                            <h:outputText escape="false" value="#{bundle.ListAtividadeEmpty}" rendered="#{atividadeController.getOriginalItems(atividadeController.selected.processoidProcesso.idProcesso).rowCount == 0}"/>
+                            <h:panelGroup rendered="#{atividadeController.getOriginalItems(atividadeController.selected.processoidProcesso.idProcesso).rowCount > 0}">                                                                                                
+                                <h:dataTable class="table" value="#{atividadeController.getOriginalItems(atividadeController.selected.processoidProcesso.idProcesso)}" var="item" border="0" cellpadding="2" cellspacing="0" rowClasses="jsfcrud_odd_row,jsfcrud_even_row" rules="all" style="border: 1px solid;">
                                     <h:column>
                                         <f:facet name="header">
-                                            <h:selectBooleanCheckbox onclick="toggleAll(); enableButton();"></h:selectBooleanCheckbox>
+                                            <h:selectBooleanCheckbox onclick="toggleAll(); enableAssociate();"></h:selectBooleanCheckbox>
                                         </f:facet>                                      
-                                        <h:selectBooleanCheckbox class="check[]" onclick="enableButton();" value="#{atividadeController.selectedItems[item]}"></h:selectBooleanCheckbox>
+                                        <h:selectBooleanCheckbox class="check[]" onclick="enableAssociate();" value="#{atividadeController.selectedItems[item]}"></h:selectBooleanCheckbox>
                                     </h:column>
                                     <!--<h:column>
                                         <f:facet name="header">
