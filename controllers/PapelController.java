@@ -39,6 +39,9 @@ public class PapelController implements Serializable {
     private jpa.session.PapelFacade ejbFacade;
     private PaginationHelper pagination;
     private int selectedItemIndex;
+    private Atividade atividade;
+    private Utilizador utilizador;
+    private PapelhasAtividade association;
     
      // map for selected stuff on the JSF page
     private Map<Papel, Boolean> selectedItems;
@@ -89,30 +92,42 @@ public class PapelController implements Serializable {
             associate(papersOnList.get(i));
         }
         selectedItems = new HashMap<>();
+        papersOnList = new ArrayList<>();
         return "associatePapel";
     }
     
+    public String prepareAssociate(int ativi){
+        current = new Papel();
+        selectedItemIndex= -1;
+        atividade = new Atividade();
+        atividade.setIdAtividades(ativi);
+        utilizador = new Utilizador();
+        utilizador.setIdUtilizador(1);
+        current.setUtilizadoridUtilizador(utilizador);
+        return "/atividade/associatePapel";
+    }
+    
     public void associate(Papel p) {
-        current = p;
-        Atividade nova = new Atividade(10);
-        Utilizador autor = new Utilizador(1);
-        PapelhasAtividade association = new PapelhasAtividade();
-        PapelhasAtividadePK pk = new PapelhasAtividadePK(current.getIdPapel(), nova.getIdAtividades());
+        current.setIdPapel(p.getIdPapel());
+        current.setDescricao(p.getDescricao());
+        current.setNome(p.getNome());
+        current.setDataCriacao(p.getDataCriacao());
+        
+        association = new PapelhasAtividade();
+        
+        PapelhasAtividadePK pk = new PapelhasAtividadePK(current.getIdPapel(), atividade.getIdAtividades());
         Date date = new Date();
-        association.setAtividade(nova);
+        association.setAtividade(atividade);
         association.setPapel(current);
-        association.setUtilizadoridUtilizador(autor);
+        association.setUtilizadoridUtilizador(current.getUtilizadoridUtilizador());
         association.setPapelhasAtividadePK(pk);
         association.setDataCriacao(date);
         papelhasAtividadeFacade.create(association);
-        update();
-    }
-    
-    public String prepareAssociate() {
-        recreatePagination();
         recreateModel();
-        return "/atividade/associatePapel";
+        recreatePagination();
+        JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/resources/Bundle").getString("papelAssociated"));
     }
+   
     
     public String prepareListOfPapers() {
         recreatePagination();
@@ -206,11 +221,13 @@ public class PapelController implements Serializable {
         return "Edit";
     }
     
-    public void associateSelectedList(){
+    public void destroySelectedList(){
         prepareSelectedList();
-        for(Papel p: papeisOnList){
+        for(Papel p: papersOnList){
             prepareDestroy(p);
         }
+        selectedItems = new HashMap<>();
+        papersOnList = new ArrayList<>();
     }
 
     public String update() {
@@ -275,6 +292,7 @@ public class PapelController implements Serializable {
         recreateModel();
         updateCurrentItem();
         recreateModel();
+        recreatePagination();
         return "List";
         
     }

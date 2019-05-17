@@ -147,26 +147,32 @@ public class AtividadeController implements Serializable {
         return "Edit";
     }
     
-    public void associateSelectedList(){
+    public String associateSelectedList(){
         prepareSelectedList();
         for(Atividade a : atividadesOnList){
+            prepareAssociate(processo.getIdProcesso());
             FinalAssociate(a);
         }
+        selectedItems = new HashMap<>();
+        atividadesOnList = new ArrayList<>();
+        recreatePagination();
+        recreateModel();
+        return "/processo/View";
     }
         
-     public String prepareAssociate(){
+     public String prepareAssociate(int proc){
         current = new Atividade();
         selectedItemIndex= -1;
         processo = new Processo();
-        processo.setIdProcesso(31);
+        processo.setIdProcesso(proc);
         current.setProcessoidProcesso(processo);
         utilizador = new Utilizador();
         utilizador.setIdUtilizador(1);
         current.setUtilizadoridUtilizador(utilizador);
-        return "/atividade/Associate";
+        return "/processo/Associate";
     }
     
-    public String FinalAssociate(Atividade a){        
+    public void FinalAssociate(Atividade a){        
         current.setIdAtividades(0);
         current.setNome(a.getNome());
         current.setDescricao(a.getDescricao());
@@ -175,10 +181,11 @@ public class AtividadeController implements Serializable {
         associate();
         recreatePagination();
         recreateModel();
-        return "Associate";
     }
     
     public String associate() {
+        recreatePagination();
+        recreateModel();
         try {
             getFacade().create(current);
             JsfUtil.addSuccessMessage("Atividade Associada");
@@ -209,9 +216,11 @@ public class AtividadeController implements Serializable {
 
     public String destroyActivities() {
         prepareSelectedList();
-        for (int i = 0; i < ativitidadesOnList.size(); i++) {
-            destroyAtividade(ativitidadesOnList.get(i));
+        for (int i = 0; i < atividadesOnList.size(); i++) {
+            destroyAtividade(atividadesOnList.get(i));
         }
+        selectedItems = new HashMap<>();
+        atividadesOnList = new ArrayList<>();
         return "List";
     }
     
@@ -242,6 +251,7 @@ public class AtividadeController implements Serializable {
         recreateModel();
         updateCurrentItem();
         recreateModel();
+        recreatePagination();
         return "List";
     }
     

@@ -93,24 +93,7 @@ public class ProcessoController implements Serializable {
         return pagination;
     }
 
-    public PaginationHelper getOriginalPagination() {
-        if (pagination == null) {
-            pagination = new PaginationHelper(10) {
-
-                @Override
-                public int getItemsCount() {
-                    return getFacade().countOriginal();
-                }
-
-                @Override
-                public DataModel createPageDataModel() {
-                    return new ListDataModel(getFacade().getOriginal());
-                }
-                
-            };
-        }
-        return pagination;
-    }
+ 
 
 
     public String prepareList() {
@@ -140,6 +123,8 @@ public class ProcessoController implements Serializable {
    
     
     public String create() {
+        recreateModel();
+        recreatePagination();
         try {
             getFacade().create(current);
             JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/resources/Bundle").getString("ProcessoCreated"));
@@ -193,6 +178,7 @@ public class ProcessoController implements Serializable {
         for (int i = 0; i < processosOnList.size(); i++) {
             destroyProcesso(processosOnList.get(i));
         }
+        selectedItems = new HashMap<>();
         return "List";
     }
 
@@ -268,16 +254,6 @@ public class ProcessoController implements Serializable {
         }
         return items;
     }
-
-    public DataModel getOriginalItems(){
-        recreatePagination();
-        recreateModel();
-        if(items == null) {
-            items = getOriginalPagination().createPageDataModel();
-        }
-        return items;
-    }
-
 
     private void recreateModel() {
         items = null;
