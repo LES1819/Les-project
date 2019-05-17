@@ -5,19 +5,19 @@
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:f="http://xmlns.jcp.org/jsf/core">
 
-    <ui:composition template="../template.xhtml">
+    <ui:composition template="/template.xhtml">
         <ui:define name="title">
             <h:outputText value="#{bundle.ListAtividadeTitle}"></h:outputText>
         </ui:define>
         <ui:define name="content">
             <br/>
 
-          
-               
-            
+
+
+
 
             <h:form styleClass="jsfcrux\d_list_form">
-                 
+
                 <div class="btn-group right">
                     <h:commandButton class="check btn btn-secondary" action="#{atividadeController.prepareCreate}" value="Criar"/>
 
@@ -28,16 +28,15 @@
                 <h:panelGroup id="messagePanel" layout="block">
                     <h:messages errorStyle="color: red" infoStyle="color: green" layout="table"/>
                 </h:panelGroup>
-                 <h:outputText value="#{atividadeController.pagination.pageFirstItem +1}..#{atividadeController.pagination.pageLastItem + 1}/#{atividadeController.pagination.itemsCount}"/>&nbsp;
+                <h:outputText value="#{atividadeController.pagination.pageFirstItem +1}..#{atividadeController.pagination.pageLastItem + 1}/#{atividadeController.pagination.itemsCount}"/>&nbsp;
                 <h:outputText escape="false" value="#{bundle.ListAtividadeEmpty}" rendered="#{atividadeController.items.rowCount == 0}"/>
                 <h:panelGroup rendered="#{atividadeController.items.rowCount > 0}">
                     <h:commandLink action="#{atividadeController.previous}" value="#{bundle.Previous} #{atividadeController.pagination.pageSize}" rendered="#{atividadeController.pagination.hasPreviousPage}"/>&nbsp;
-                    <h:commandLink action="#{atividadeController.next}" value="#{bundle.Next} #{atividadeController.pagination.pageSize}" rendered="#{atividadeController.pagination.hasNextPage}"/>&nbsp;
-                    <div class="table">
-                    <h:dataTable value="#{atividadeController.items}" var="item" border="0" cellpadding="2" cellspacing="0" rowClasses="jsfcrud_odd_row,jsfcrud_even_row" rules="all">
+                    <h:commandLink action="#{atividadeController.next}" value="#{bundle.Next} #{atividadeController.pagination.pageSize}" rendered="#{atividadeController.pagination.hasNextPage}"/>&nbsp;              
+                    <h:dataTable class="table" value="#{atividadeController.items}" var="item" border="0" cellpadding="2" cellspacing="0" rowClasses="jsfcrud_odd_row,jsfcrud_even_row" rules="all">
                         <h:column>
                             <f:facet name ="header">
-                                <h:selectBooleanCheckbox onclick="toggleAll()"></h:selectBooleanCheckbox>
+                                <h:selectBooleanCheckbox onclick="toggleAll2()"></h:selectBooleanCheckbox>
                             </f:facet>
                             <h:selectBooleanCheckbox class="check[]" onclick="toggle()" value="#{atividadeController.selectedItems[item]}"></h:selectBooleanCheckbox>
                         </h:column>
@@ -72,44 +71,42 @@
                                 <h:outputText value="&nbsp;"/>
                             </f:facet>
                             <h:commandLink action="#{atividadeController.prepareView}" value="#{bundle.ListAtividadeViewLink}"/>
-                            <h:outputText value=" "/>
-
-                            <h:outputText value=" "/>
-
-                        </h:column>
-                    </h:dataTable>
-                    </div>
-                </h:panelGroup>
-            
-                <br />
-                <br />
-
-                <br />
-                <br />
-                <div class="modal fade"  id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">Apagar a(s) Atividade?</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <p id="modalid">Irá apagar as cópias desta(s) atividades e as suas associações a papéis,produtos,processos e padrões.</p>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                            <h:commandButton class="btn btn-primary" action="#{atividadeController.destroyActivities()}" value="Apagar"></h:commandButton>
-                        </div>
-                    </div>
-                </div>
-            </div>
+                            <h:commandLink action="#{papelController.prepareAssociate(item.idAtividades)}" value=" Associar Papéis" rendered="#{item.idAtividadeOriginal == NULL}"/>
+                            <h:commandLink action="#{produtoController.prepareAssociate(item.idAtividades)}" value=" Associar Produtos" rendered="#{item.idAtividadeOriginal == NULL}"/>
+                    
+                    </h:column>
                 
-            </h:form>
-            
+                        </h:dataTable>
+                    </h:panelGroup>
+                            <br />
 
-            <h:outputScript library ="javascript" name ="checkboxes.js" />
-        </ui:define>
-    </ui:composition>
-</html>
+                            <br />
+                            <br />
+                            <div class="modal fade"  id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLabel">Apagar a(s) Atividade?</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p id="modalid">Irá apagar as cópias desta(s) atividades e as suas associações a papéis,produtos,processos e padrões.</p>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                                            <h:commandButton class="btn btn-primary" action="#{atividadeController.destroyActivities()}" value="Apagar"></h:commandButton>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            </h:form>
+                    
+
+                            <h:outputScript library ="javascript" name ="checkboxes.js" />
+                            </ui:define>
+                            </ui:composition>
+                            </html>
+

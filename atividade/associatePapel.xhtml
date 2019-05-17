@@ -22,9 +22,9 @@
                     <h:dataTable value="#{papelController.itemsNotAssociated}" var="item" border="0" cellpadding="2" cellspacing="0" rowClasses="jsfcrud_odd_row,jsfcrud_even_row" rules="all" style="border:solid 1px">
                         <h:column>
                             <f:facet name="header">
-                                <h:selectBooleanCheckbox onclick="toggleAll(); enableButton();"></h:selectBooleanCheckbox>
+                                <h:selectBooleanCheckbox onclick="toggleAll(); enableAssociate();"></h:selectBooleanCheckbox>
                             </f:facet>
-                            <h:selectBooleanCheckbox class="check[]" onchange="enableButton();" value="#{papelController.selectedItems[item]}" />
+                            <h:selectBooleanCheckbox class="check[]" onchange="enableAssociate();" value="#{papelController.selectedItems[item]}" />
                         </h:column>
                         <h:column>
                         <f:facet name="header">
