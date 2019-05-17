@@ -9,7 +9,6 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.Date;
 import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -30,64 +29,58 @@ import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author tiago
+ * @author andre
  */
 @Entity
-@Table(name = "Produto")
+@Table(name = "Processo")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Produto.findAll", query = "SELECT p FROM Produto p"),
-    @NamedQuery(name = "Produto.notAssociated", query = "SELECT p FROM Produto p WHERE p NOT IN(SELECT a.produto FROM ProdutohasAtividade a)"),
-    @NamedQuery(name = "Produto.findByIdProduto", query = "SELECT p FROM Produto p WHERE p.idProduto = :idProduto"),
-    @NamedQuery(name = "Produto.findByNome", query = "SELECT p FROM Produto p WHERE p.nome = :nome"),
-    @NamedQuery(name = "Produto.findByDescricao", query = "SELECT p FROM Produto p WHERE p.descricao = :descricao"),
-    @NamedQuery(name = "Produto.findByTipo", query = "SELECT p FROM Produto p WHERE p.tipo = :tipo"),
-    @NamedQuery(name = "Produto.destroyAssociations", query ="DELETE FROM ProdutohasAtividade p WHERE p.produto = :produto"),
-    @NamedQuery(name = "Produto.findByDataCriacao", query = "SELECT p FROM Produto p WHERE p.dataCriacao = :dataCriacao")})
-public class Produto implements Serializable {
+    @NamedQuery(name = "Processo.findAll", query = "SELECT p FROM Processo p"),
+    @NamedQuery(name = "Processo.findByIdProcesso", query = "SELECT p FROM Processo p WHERE p.idProcesso = :idProcesso"),
+    @NamedQuery(name = "Processo.findByNome", query = "SELECT p FROM Processo p WHERE p.nome = :nome"),
+    @NamedQuery(name = "Processo.findByDescricao", query = "SELECT p FROM Processo p WHERE p.descricao = :descricao"),
+    @NamedQuery(name = "Processo.findByDataCriacao", query = "SELECT p FROM Processo p WHERE p.dataCriacao = :dataCriacao")})
+public class Processo implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
-    @Column(name = "idProduto")
-    private Integer idProduto;
+    @Column(name = "idProcesso")
+    private Integer idProcesso;
     @Size(max = 45)
     @Column(name = "nome")
     private String nome;
     @Size(max = 500)
     @Column(name = "descricao")
     private String descricao;
-    @Size(max = 16)
-    @Column(name = "Tipo")
-    private String tipo;
     @Column(name = "dataCriacao")
     @Temporal(TemporalType.TIMESTAMP)
     private Date dataCriacao;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "produto")
-    private Collection<ProdutohasAtividade> produtohasAtividadeCollection;
+    @OneToMany(mappedBy = "processoidProcesso")
+    private Collection<Atividade> atividadeCollection;
     @JoinColumn(name = "Utilizador_idUtilizador", referencedColumnName = "idUtilizador")
     @ManyToOne(optional = false)
     private Utilizador utilizadoridUtilizador;
 
-    public Produto() {
+    public Processo() {
     }
 
-    public Produto(Integer idProduto) {
-        this.idProduto = idProduto;
+    public Processo(Integer idProcesso) {
+        this.idProcesso = idProcesso;
     }
 
-    public Produto(Integer idProduto, Date dataCriacao) {
-        this.idProduto = idProduto;
+    public Processo(Integer idProcesso, Date dataCriacao) {
+        this.idProcesso = idProcesso;
         this.dataCriacao = dataCriacao;
     }
 
-    public Integer getIdProduto() {
-        return idProduto;
+    public Integer getIdProcesso() {
+        return idProcesso;
     }
 
-    public void setIdProduto(Integer idProduto) {
-        this.idProduto = idProduto;
+    public void setIdProcesso(Integer idProcesso) {
+        this.idProcesso = idProcesso;
     }
 
     public String getNome() {
@@ -106,14 +99,6 @@ public class Produto implements Serializable {
         this.descricao = descricao;
     }
 
-    public String getTipo() {
-        return tipo;
-    }
-
-    public void setTipo(String tipo) {
-        this.tipo = tipo;
-    }
-
     public Date getDataCriacao() {
         return dataCriacao;
     }
@@ -123,12 +108,12 @@ public class Produto implements Serializable {
     }
 
     @XmlTransient
-    public Collection<ProdutohasAtividade> getProdutohasAtividadeCollection() {
-        return produtohasAtividadeCollection;
+    public Collection<Atividade> getAtividadeCollection() {
+        return atividadeCollection;
     }
 
-    public void setProdutohasAtividadeCollection(Collection<ProdutohasAtividade> produtohasAtividadeCollection) {
-        this.produtohasAtividadeCollection = produtohasAtividadeCollection;
+    public void setAtividadeCollection(Collection<Atividade> atividadeCollection) {
+        this.atividadeCollection = atividadeCollection;
     }
 
     public Utilizador getUtilizadoridUtilizador() {
@@ -142,18 +127,18 @@ public class Produto implements Serializable {
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (idProduto != null ? idProduto.hashCode() : 0);
+        hash += (idProcesso != null ? idProcesso.hashCode() : 0);
         return hash;
     }
 
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Produto)) {
+        if (!(object instanceof Processo)) {
             return false;
         }
-        Produto other = (Produto) object;
-        if ((this.idProduto == null && other.idProduto != null) || (this.idProduto != null && !this.idProduto.equals(other.idProduto))) {
+        Processo other = (Processo) object;
+        if ((this.idProcesso == null && other.idProcesso != null) || (this.idProcesso != null && !this.idProcesso.equals(other.idProcesso))) {
             return false;
         }
         return true;
@@ -161,7 +146,7 @@ public class Produto implements Serializable {
 
     @Override
     public String toString() {
-        return "jpa.entities.Produto[ idProduto=" + idProduto + " ]";
+        return "jpa.entities.Processo[ idProcesso=" + idProcesso + " ]";
     }
     
 }

@@ -38,11 +38,13 @@ import javax.xml.bind.annotation.XmlTransient;
 @NamedQueries({
     @NamedQuery(name = "Atividade.findAll", query = "SELECT a FROM Atividade a"),
     @NamedQuery(name = "Atividade.findByIdAtividades", query = "SELECT a FROM Atividade a WHERE a.idAtividades = :idAtividades"),
-    @NamedQuery(name = "Atividade.findOriginal", query = "SELECT a FROM Atividade a WHERE a.processoidProcesso IS NULL AND a.idAtividades NOT IN(SElECT b.idAtivi,deOriginal.idAtividades FROM Atividade b WHERE b.processoidProcesso.idProcesso = :param)"),
+    @NamedQuery(name = "Atividade.findOriginal", query = "SELECT a FROM Atividade a WHERE a.processoidProcesso IS NULL AND a.idAtividades NOT IN(SELECT b.idAtividadeOriginal.idAtividades FROM Atividade b WHERE b.processoidProcesso.idProcesso = :param)"),
     @NamedQuery(name = "Atividade.isCopy",query ="SELECT a FROM Atividade a WHERE a.idAtividadeOriginal IS NOT NULL AND a.idAtividades = :atividade"),
     @NamedQuery(name = "Atividade.getCopies",query ="SELECT a FROM Atividade a WHERE a.idAtividadeOriginal = :atividade"),
+    @NamedQuery(name = "Atividade.setIdOriginalNull",query ="UPDATE Atividade a SET a.idAtividadeOriginal = NULL WHERE a.idAtividades = :atividade"),
     @NamedQuery(name = "Atividade.destroyAssociatedPapers", query ="DELETE FROM PapelhasAtividade p WHERE p.atividade = :atividade"),
     @NamedQuery(name = "Atividade.destroyAssociatedPatterns", query ="DELETE FROM AtividadehasPadrao p WHERE p.atividade = :atividade"),
+    @NamedQuery(name = "Atividade.destroyAssociatedProcesso", query ="DELETE FROM Atividade p WHERE p.processoidProcesso = :processo"),
     @NamedQuery(name = "Atividade.destroyCopias", query ="DELETE FROM Atividade a WHERE a.idAtividadeOriginal = :id"),
     @NamedQuery(name = "Atividade.destroyAssociatedProducts", query ="DELETE FROM ProdutohasAtividade p WHERE p.atividade = :atividade"),
     @NamedQuery(name = "Atividade.findByNome", query = "SELECT a FROM Atividade a WHERE a.nome = :nome"),
@@ -211,7 +213,7 @@ public class Atividade implements Serializable {
 
     @Override
     public String toString() {
-        return "jpa.entities.Atividade[ idAtividades=" + idAtividades + " ]";
+        return nome;
     }
     
 }
