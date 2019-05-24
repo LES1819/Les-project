@@ -40,6 +40,7 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Padrao.findAll", query = "SELECT p FROM Padrao p"),
     @NamedQuery(name = "Padrao.findByIdPadr\u00e3o", query = "SELECT p FROM Padrao p WHERE p.idPadr\u00e3o = :idPadr\u00e3o"),
     @NamedQuery(name = "Padrao.findByNome", query = "SELECT p FROM Padrao p WHERE p.nome = :nome"),
+    @NamedQuery(name = "Padrao.notAssociated", query = "SELECT p FROM Padrao p WHERE p NOT IN(SELECT a.padrao FROM AtividadehasPadrao a WHERE a.atividade =:atividade)"),
     @NamedQuery(name = "Padrao.findByDescricao", query = "SELECT p FROM Padrao p WHERE p.descricao = :descricao"),
     @NamedQuery(name = "Padrao.findByDataCriacao", query = "SELECT p FROM Padrao p WHERE p.dataCriacao = :dataCriacao")})
 public class Padrao implements Serializable {
