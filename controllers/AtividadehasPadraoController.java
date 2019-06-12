@@ -223,6 +223,8 @@ public class AtividadehasPadraoController implements Serializable {
             }
         }
         
+     }   
+        
          public DataModel getAssociatedPatterns(Atividade atividadeArg){
         atividade = atividadeArg;
         items = getPatternsPagination().createPageDataModel();
@@ -274,6 +276,6 @@ public class AtividadehasPadraoController implements Serializable {
         }
     }
 
-    }
+    
 
 }
