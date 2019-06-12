@@ -55,18 +55,7 @@ public class AtividadeController implements Serializable {
         return current;
     }
     
-    private void prepareSelectedList(){
-        atividadesOnList = new ArrayList<Atividade>();
-        for(Atividade a : selectedItems.keySet()){
-            if(selectedItems.get(a) == true){
-                atividadesOnList.add(a);
-            }
-        }
-    }
     
-    public Map<Atividade, Boolean> getSelectedItems(){
-        return selectedItems;
-    }
 
     private AtividadeFacade getFacade() {
         return ejbFacade;
@@ -90,24 +79,7 @@ public class AtividadeController implements Serializable {
         return pagination;
     }
     
-    public PaginationHelper getOriginalPagination(int pid) {
-        if (pagination == null) {
-            pagination = new PaginationHelper(6) {
-
-                @Override
-                public int getItemsCount() {
-                    return getFacade().countOriginal(pid);
-                }
-
-                @Override
-                public DataModel createPageDataModel() {
-                    return new ListDataModel(getFacade().getOriginal(pid));
-                }
-                
-            };
-        }
-        return pagination;
-    }
+   
 
     public String prepareList() {
         recreateModel();
@@ -119,17 +91,7 @@ public class AtividadeController implements Serializable {
         selectedItemIndex = pagination.getPageFirstItem() + getItems().getRowIndex();
         return "View";
     }
-
-  public String prepareCreate() {
-        current = new Atividade();
-        selectedItemIndex = -1;
-        utilizador = new Utilizador();
-        utilizador.setIdUtilizador(1);
-        current.setUtilizadoridUtilizador(utilizador);
-        return "Create";
-    }
     
-
     public String create() {
         try {
             getFacade().create(current);
@@ -147,54 +109,7 @@ public class AtividadeController implements Serializable {
         return "Edit";
     }
     
-    public String associateSelectedList(){
-        prepareSelectedList();
-        for(Atividade a : atividadesOnList){
-            prepareAssociate(processo.getIdProcesso());
-            FinalAssociate(a);
-        }
-        selectedItems = new HashMap<>();
-        atividadesOnList = new ArrayList<>();
-        recreatePagination();
-        recreateModel();
-        return "/processo/View";
-    }
-        
-     public String prepareAssociate(int proc){
-        current = new Atividade();
-        selectedItemIndex= -1;
-        processo = new Processo();
-        processo.setIdProcesso(proc);
-        current.setProcessoidProcesso(processo);
-        utilizador = new Utilizador();
-        utilizador.setIdUtilizador(1);
-        current.setUtilizadoridUtilizador(utilizador);
-        return "/processo/Associate";
-    }
-    
-    public void FinalAssociate(Atividade a){        
-        current.setIdAtividades(0);
-        current.setNome(a.getNome());
-        current.setDescricao(a.getDescricao());
-        current.setDataCriacao(new Date(System.currentTimeMillis()));
-        current.setIdAtividadeOriginal(a);
-        associate();
-        recreatePagination();
-        recreateModel();
-    }
-    
-    public String associate() {
-        recreatePagination();
-        recreateModel();
-        try {
-            getFacade().create(current);
-            JsfUtil.addSuccessMessage("Atividade Associada");
-            return prepareCreate();
-        } catch (Exception e) {
-            JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/resources/Bundle").getString("PersistenceErrorOccured"));
-            return null;
-        }
-    }
+   
 
     public String update() {
         try {
@@ -207,23 +122,6 @@ public class AtividadeController implements Serializable {
         }
     }
 
-    public void destroyAtividade(Atividade a) {
-        current = a;
-        performDestroyFull();
-        recreatePagination();
-        recreateModel();
-    }
-
-    public String destroyActivities() {
-        prepareSelectedList();
-        for (int i = 0; i < atividadesOnList.size(); i++) {
-            destroyAtividade(atividadesOnList.get(i));
-        }
-        selectedItems = new HashMap<>();
-        atividadesOnList = new ArrayList<>();
-        return "List";
-    }
-    
     public String destroy() {
         current = (Atividade) getItems().getRowData();
         selectedItemIndex = pagination.getPageFirstItem() + getItems().getRowIndex();
@@ -246,24 +144,7 @@ public class AtividadeController implements Serializable {
         }
     }
     
-        public String destroyAndList() {
-        performDestroyFull();
-        recreateModel();
-        updateCurrentItem();
-        recreateModel();
-        recreatePagination();
-        return "List";
-    }
-    
-    private void performDestroyFull() {
-        try {
-            getFacade().destroyAtividade(current);
-            getFacade().remove(current);
-            JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/resources/Bundle").getString("AtividadeDeleted"));
-        } catch (Exception e) {
-            JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/resources/Bundle").getString("PersistenceErrorOccured"));
-        }
-    }
+
 
     private void performDestroy() {
         try {
@@ -295,15 +176,6 @@ public class AtividadeController implements Serializable {
         }
         return items;
     }
-    
-    public DataModel getOriginalItems(int pid){
-        recreatePagination();
-        recreateModel();
-        if(items == null) {
-            items = getOriginalPagination(pid).createPageDataModel();
-        }
-        return items;
-    }
 
     private void recreateModel() {
         items = null;
@@ -325,17 +197,7 @@ public class AtividadeController implements Serializable {
         return "List";
     }
     
-    public String nextOriginal(int pid) {
-        getOriginalPagination(pid).nextPage();
-        recreateModel();
-        return "List";
-    }
 
-    public String previousOriginal(int pid) {
-        getOriginalPagination(pid).previousPage();
-        recreateModel();
-        return "List";
-    }
 
     public SelectItem[] getItemsAvailableSelectMany() {
         return JsfUtil.getSelectItems(ejbFacade.findAll(), false);
@@ -386,7 +248,154 @@ public class AtividadeController implements Serializable {
                 throw new IllegalArgumentException("object " + object + " is of type " + object.getClass().getName() + "; expected type: " + Atividade.class.getName());
             }
         }
+        
+        private void prepareSelectedList(){
+        atividadesOnList = new ArrayList<Atividade>();
+        for(Atividade a : selectedItems.keySet()){
+            if(selectedItems.get(a) == true){
+                atividadesOnList.add(a);
+            }
+        }
+    }
+    
+    public Map<Atividade, Boolean> getSelectedItems(){
+        return selectedItems;
+    }
+      
+         public PaginationHelper getOriginalPagination(int pid) {
+        if (pagination == null) {
+            pagination = new PaginationHelper(6) {
 
+                @Override
+                public int getItemsCount() {
+                    return getFacade().countOriginal(pid);
+                }
+
+                @Override
+                public DataModel createPageDataModel() {
+                    return new ListDataModel(getFacade().getOriginal(pid));
+                }
+                
+            };
+        }
+        return pagination;
+    }
+        
+          public String prepareCreate() {
+        current = new Atividade();
+        selectedItemIndex = -1;
+        utilizador = new Utilizador();
+        utilizador.setIdUtilizador(1);
+        current.setUtilizadoridUtilizador(utilizador);
+        return "Create";
+    }
+        
+         public String associateSelectedList(){
+        prepareSelectedList();
+        for(Atividade a : atividadesOnList){
+            prepareAssociate(processo.getIdProcesso());
+            FinalAssociate(a);
+        }
+        selectedItems = new HashMap<>();
+        atividadesOnList = new ArrayList<>();
+        recreatePagination();
+        recreateModel();
+        return "/processo/View";
+    }
+        
+     public String prepareAssociate(int proc){
+        current = new Atividade();
+        selectedItemIndex= -1;
+        processo = new Processo();
+        processo.setIdProcesso(proc);
+        current.setProcessoidProcesso(processo);
+        utilizador = new Utilizador();
+        utilizador.setIdUtilizador(1);
+        current.setUtilizadoridUtilizador(utilizador);
+        return "/processo/Associate";
+    }
+    
+    public void FinalAssociate(Atividade a){        
+        current.setIdAtividades(0);
+        current.setNome(a.getNome());
+        current.setDescricao(a.getDescricao());
+        current.setDataCriacao(new Date(System.currentTimeMillis()));
+        current.setIdAtividadeOriginal(a);
+        associate();
+        recreatePagination();
+        recreateModel();
+    }
+    
+    public String associate() {
+        recreatePagination();
+        recreateModel();
+        try {
+            getFacade().create(current);
+            JsfUtil.addSuccessMessage("Atividade Associada");
+            return prepareCreate();
+        } catch (Exception e) {
+            JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/resources/Bundle").getString("PersistenceErrorOccured"));
+            return null;
+        }
+    }
+        
+         public void destroyAtividade(Atividade a) {
+        current = a;
+        performDestroyFull();
+        recreatePagination();
+        recreateModel();
+    }
+
+    public String destroyActivities() {
+        prepareSelectedList();
+        for (int i = 0; i < atividadesOnList.size(); i++) {
+            destroyAtividade(atividadesOnList.get(i));
+        }
+        selectedItems = new HashMap<>();
+        atividadesOnList = new ArrayList<>();
+        return "List";
+    }
+        
+                public String destroyAndList() {
+        performDestroyFull();
+        recreateModel();
+        updateCurrentItem();
+        recreateModel();
+        recreatePagination();
+        return "List";
+    }
+    
+    private void performDestroyFull() {
+        try {
+            getFacade().destroyAtividade(current);
+            getFacade().remove(current);
+            JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/resources/Bundle").getString("AtividadeDeleted"));
+        } catch (Exception e) {
+            JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/resources/Bundle").getString("PersistenceErrorOccured"));
+        }
+    }
+        
+            public DataModel getOriginalItems(int pid){
+        recreatePagination();
+        recreateModel();
+        if(items == null) {
+            items = getOriginalPagination(pid).createPageDataModel();
+        }
+        return items;
+    }
+        
+            public String nextOriginal(int pid) {
+        getOriginalPagination(pid).nextPage();
+        recreateModel();
+        return "List";
+    }
+
+    public String previousOriginal(int pid) {
+        getOriginalPagination(pid).previousPage();
+        recreateModel();
+        return "List";
+    }
+      
     }
 
 }
