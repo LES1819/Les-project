@@ -260,6 +260,7 @@ public class PapelController implements Serializable {
             }
         }
         
+      }  
          private void prepareSelectedList() {
         papersOnList = new ArrayList<Papel>();
         for(Papel p : selectedItems.keySet()) {
@@ -418,6 +419,6 @@ public class PapelController implements Serializable {
     }
 
 
-    }
+    
 
 }
