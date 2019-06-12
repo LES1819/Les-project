@@ -41,14 +41,6 @@ public class ProcessoController implements Serializable {
     private Processo processo;
     private Cookie tiago=new Cookie("e","gay");
 
-      private Map<Processo, Boolean> selectedItems = new HashMap<Processo, Boolean>();
-    private List<Processo> processosOnList;
-
-    public ProcessoController() {
-        selectedItems = new HashMap<>();
-        processosOnList = new ArrayList<>();
-    }
-
     public Processo getSelected() {
         if (current == null) {
             current = new Processo();
@@ -56,20 +48,6 @@ public class ProcessoController implements Serializable {
         }
         return current;
     }
-
-        private void prepareSelectedList(){
-       processosOnList = new ArrayList<Processo>();
-        for(Processo a : selectedItems.keySet()){
-            if(selectedItems.get(a) == true){
-                processosOnList.add(a);
-            }
-        }
-    }
-
-    public Map<Processo, Boolean> getSelectedItems(){
-        return selectedItems;
-    }
-
 
     private ProcessoFacade getFacade() {
         return ejbFacade;
@@ -93,17 +71,9 @@ public class ProcessoController implements Serializable {
         return pagination;
     }
 
- 
-
-
     public String prepareList() {
         recreateModel();
         return "List";
-    }
-
-    public String getvalor(){
-        return tiago.getValue();
-        
     }
     
     public String prepareView() {
@@ -111,48 +81,11 @@ public class ProcessoController implements Serializable {
         selectedItemIndex = pagination.getPageFirstItem() + getItems().getRowIndex();
         return "View";
     }
-
-    public String prepareCreate() {
-        current = new Processo();
-        selectedItemIndex = -1;
-        utilizador = new Utilizador();
-        utilizador.setIdUtilizador(1);
-        current.setUtilizadoridUtilizador(utilizador);
-        return "Create";
-    }
-   
-    
-    public String create() {
-        recreateModel();
-        recreatePagination();
-        try {
-            getFacade().create(current);
-            JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/resources/Bundle").getString("ProcessoCreated"));
-            return prepareCreate();
-        } catch (Exception e) {
-            JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/resources/Bundle").getString("PersistenceErrorOccured"));
-            return null;
-        }
-    }
-
-    
-
+     
     public String prepareEdit() {
         current = (Processo) getItems().getRowData();
         selectedItemIndex = pagination.getPageFirstItem() + getItems().getRowIndex();
         return "Edit";
-    }
-
-
-       public String associate() {
-        try {
-            getFacade().create(current);
-            JsfUtil.addSuccessMessage("Processo Associado");
-            return prepareCreate();
-        } catch (Exception e) {
-            JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/resources/Bundle").getString("PersistenceErrorOccured"));
-            return null;
-        }
     }
 
     public String update() {
@@ -164,22 +97,6 @@ public class ProcessoController implements Serializable {
             JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/resources/Bundle").getString("PersistenceErrorOccured"));
             return null;
         }
-    }
-
-       public void destroyProcesso(Processo a) {
-        current = a;
-        performDestroyFull();
-        recreatePagination();
-        recreateModel();
-    }
-
-        public String destroyProcessos() {
-        prepareSelectedList();
-        for (int i = 0; i < processosOnList.size(); i++) {
-            destroyProcesso(processosOnList.get(i));
-        }
-        selectedItems = new HashMap<>();
-        return "List";
     }
 
     public String destroy() {
@@ -203,14 +120,6 @@ public class ProcessoController implements Serializable {
             return "List";
         }
     }
-
-     public String destroyAndList() {
-        performDestroyFull();
-        recreateModel();
-        updateCurrentItem();
-        recreateModel();
-        return "List";
-}
 
     private void performDestroyFull() {
         try {
@@ -326,5 +235,91 @@ public class ProcessoController implements Serializable {
         }
 
     }
+    
+    // start of our code
+    
+        public String create() {
+        recreateModel();
+        recreatePagination();
+        try {
+            getFacade().create(current);
+            JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/resources/Bundle").getString("ProcessoCreated"));
+            return prepareCreate();
+        } catch (Exception e) {
+            JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/resources/Bundle").getString("PersistenceErrorOccured"));
+            return null;
+        }
+    }
+    
+        public ProcessoController() {
+        selectedItems = new HashMap<>();
+        processosOnList = new ArrayList<>();
+    }
+    
+      private void prepareSelectedList(){
+       processosOnList = new ArrayList<Processo>();
+        for(Processo a : selectedItems.keySet()){
+            if(selectedItems.get(a) == true){
+                processosOnList.add(a);
+            }
+        }
+    }
+
+    public Map<Processo, Boolean> getSelectedItems(){
+        return selectedItems;
+    }
+    
+        public String getvalor(){
+        return tiago.getValue();
+        
+    }
+    
+        public String prepareCreate() {
+        current = new Processo();
+        selectedItemIndex = -1;
+        utilizador = new Utilizador();
+        utilizador.setIdUtilizador(1);
+        current.setUtilizadoridUtilizador(utilizador);
+        return "Create";
+    }
+    
+    
+       public String associate() {
+        try {
+            getFacade().create(current);
+            JsfUtil.addSuccessMessage("Processo Associado");
+            return prepareCreate();
+        } catch (Exception e) {
+            JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/resources/Bundle").getString("PersistenceErrorOccured"));
+            return null;
+        }
+    }
+    
+    public void destroyProcesso(Processo a) {
+        current = a;
+        performDestroyFull();
+        recreatePagination();
+        recreateModel();
+    }
+
+        public String destroyProcessos() {
+        prepareSelectedList();
+        for (int i = 0; i < processosOnList.size(); i++) {
+            destroyProcesso(processosOnList.get(i));
+        }
+        selectedItems = new HashMap<>();
+        return "List";
+    }
+    
+         public String destroyAndList() {
+        performDestroyFull();
+        recreateModel();
+        updateCurrentItem();
+        recreateModel();
+        return "List";
+}
+    
+          private Map<Processo, Boolean> selectedItems = new HashMap<Processo, Boolean>();
+    private List<Processo> processosOnList;
 
 }
