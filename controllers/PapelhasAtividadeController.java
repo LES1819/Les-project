@@ -34,29 +34,7 @@ public class PapelhasAtividadeController implements Serializable {
     public PapelhasAtividadeController() {
     }
 
-    public DataModel getAssociatedPapers(Atividade atividadeArg){
-        atividade = atividadeArg;
-        items = getPapersPagination().createPageDataModel();
-        return items;
-    }
     
-    public PaginationHelper getPapersPagination() {
-        if (pagination == null) {
-            pagination = new PaginationHelper(10) {
-
-                @Override
-                public int getItemsCount() {
-                    return getFacade().countAssociatedPapers(atividade);
-                }
-
-                @Override
-                public DataModel createPageDataModel() {
-                    return new ListDataModel(getFacade().getAssociatedPapers(atividade));
-                }
-            };
-        }
-        return pagination;
-    }
     
     public PapelhasAtividade getSelected() {
         if (current == null) {
@@ -269,7 +247,34 @@ public class PapelhasAtividadeController implements Serializable {
                 throw new IllegalArgumentException("object " + object + " is of type " + object.getClass().getName() + "; expected type: " + PapelhasAtividade.class.getName());
             }
         }
-
+    
+     }
+        // begins our code
+        
+        public DataModel getAssociatedPapers(Atividade atividadeArg){
+        atividade = atividadeArg;
+        items = getPapersPagination().createPageDataModel();
+        return items;
     }
+    
+    public PaginationHelper getPapersPagination() {
+        if (pagination == null) {
+            pagination = new PaginationHelper(10) {
+
+                @Override
+                public int getItemsCount() {
+                    return getFacade().countAssociatedPapers(atividade);
+                }
+
+                @Override
+                public DataModel createPageDataModel() {
+                    return new ListDataModel(getFacade().getAssociatedPapers(atividade));
+                }
+            };
+        }
+        return pagination;
+    }
+
+    
 
 }
