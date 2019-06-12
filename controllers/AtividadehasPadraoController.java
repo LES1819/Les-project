@@ -47,29 +47,7 @@ public class AtividadehasPadraoController implements Serializable {
         return ejbFacade;
     }
     
-    public DataModel getAssociatedPatterns(Atividade atividadeArg){
-        atividade = atividadeArg;
-        items = getPatternsPagination().createPageDataModel();
-        return items;
-    }
-    
-     public PaginationHelper getPatternsPagination() {
-        if (pagination == null) {
-            pagination = new PaginationHelper(10) {
-
-                @Override
-                public int getItemsCount() {
-                    return getFacade().countAssociatedPatterns(atividade);
-                }
-
-                @Override
-                public DataModel createPageDataModel() {
-                    return new ListDataModel(getFacade().getAssociatedPatterns(atividade));
-                }
-            };
-        }
-        return pagination;
-    }
+   
 
     public PaginationHelper getPagination() {
         if (pagination == null) {
@@ -107,36 +85,11 @@ public class AtividadehasPadraoController implements Serializable {
         return "Create";
     }
 
-    public String create() {
-        try {
-            current.getAtividadehasPadraoPK().setPadraoidPadrão(current.getPadrao().getIdPadrão());
-            current.getAtividadehasPadraoPK().setAtividadeidAtividades(current.getAtividade().getIdAtividades());
-            getFacade().create(current);
-            JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/resources/Bundle").getString("AtividadehasPadraoCreated"));
-            return prepareCreate();
-        } catch (Exception e) {
-            JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/resources/Bundle").getString("PersistenceErrorOccured"));
-            return null;
-        }
-    }
 
     public String prepareEdit() {
         current = (AtividadehasPadrao) getItems().getRowData();
         selectedItemIndex = pagination.getPageFirstItem() + getItems().getRowIndex();
         return "Edit";
-    }
-
-    public String update() {
-        try {
-            current.getAtividadehasPadraoPK().setPadraoidPadrão(current.getPadrao().getIdPadrão());
-            current.getAtividadehasPadraoPK().setAtividadeidAtividades(current.getAtividade().getIdAtividades());
-            getFacade().edit(current);
-            JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/resources/Bundle").getString("AtividadehasPadraoUpdated"));
-            return "View";
-        } catch (Exception e) {
-            JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/resources/Bundle").getString("PersistenceErrorOccured"));
-            return null;
-        }
     }
 
     public String destroy() {
@@ -269,6 +222,57 @@ public class AtividadehasPadraoController implements Serializable {
                 throw new IllegalArgumentException("object " + object + " is of type " + object.getClass().getName() + "; expected type: " + AtividadehasPadrao.class.getName());
             }
         }
+        
+         public DataModel getAssociatedPatterns(Atividade atividadeArg){
+        atividade = atividadeArg;
+        items = getPatternsPagination().createPageDataModel();
+        return items;
+    }
+    
+     public PaginationHelper getPatternsPagination() {
+        if (pagination == null) {
+            pagination = new PaginationHelper(10) {
+
+                @Override
+                public int getItemsCount() {
+                    return getFacade().countAssociatedPatterns(atividade);
+                }
+
+                @Override
+                public DataModel createPageDataModel() {
+                    return new ListDataModel(getFacade().getAssociatedPatterns(atividade));
+                }
+            };
+        }
+        return pagination;
+    }
+        
+        
+    public String create() {
+        try {
+            current.getAtividadehasPadraoPK().setPadraoidPadrão(current.getPadrao().getIdPadrão());
+            current.getAtividadehasPadraoPK().setAtividadeidAtividades(current.getAtividade().getIdAtividades());
+            getFacade().create(current);
+            JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/resources/Bundle").getString("AtividadehasPadraoCreated"));
+            return prepareCreate();
+        } catch (Exception e) {
+            JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/resources/Bundle").getString("PersistenceErrorOccured"));
+            return null;
+        }
+    }
+        
+            public String update() {
+        try {
+            current.getAtividadehasPadraoPK().setPadraoidPadrão(current.getPadrao().getIdPadrão());
+            current.getAtividadehasPadraoPK().setAtividadeidAtividades(current.getAtividade().getIdAtividades());
+            getFacade().edit(current);
+            JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/resources/Bundle").getString("AtividadehasPadraoUpdated"));
+            return "View";
+        } catch (Exception e) {
+            JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/resources/Bundle").getString("PersistenceErrorOccured"));
+            return null;
+        }
+    }
 
     }
 
