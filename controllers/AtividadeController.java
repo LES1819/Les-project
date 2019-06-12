@@ -249,6 +249,8 @@ public class AtividadeController implements Serializable {
             }
         }
         
+     }   
+        
         private void prepareSelectedList(){
         atividadesOnList = new ArrayList<Atividade>();
         for(Atividade a : selectedItems.keySet()){
@@ -396,6 +398,6 @@ public class AtividadeController implements Serializable {
         return "List";
     }
       
-    }
+    
 
 }
