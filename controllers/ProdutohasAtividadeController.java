@@ -25,7 +25,6 @@ public class ProdutohasAtividadeController implements Serializable {
 
     private ProdutohasAtividade current;
     private DataModel items = null;
-    private Atividade atividade;
     @EJB
     private jpa.session.ProdutohasAtividadeFacade ejbFacade;
     private PaginationHelper pagination;
@@ -34,11 +33,7 @@ public class ProdutohasAtividadeController implements Serializable {
     public ProdutohasAtividadeController() {
     }
     
-    public DataModel getAssociatedProducts(Atividade atividadeArg){
-        atividade = atividadeArg;
-        items = getProductsPagination().createPageDataModel();
-        return items;
-    }
+   
     
     public PaginationHelper getProductsPagination() {
         if (pagination == null) {
@@ -270,6 +265,15 @@ public class ProdutohasAtividadeController implements Serializable {
             }
         }
 
+    }
+    
+    // start of our code
+     private Atividade atividade;
+    
+     public DataModel getAssociatedProducts(Atividade atividadeArg){
+        atividade = atividadeArg;
+        items = getProductsPagination().createPageDataModel();
+        return items;
     }
 
 }
