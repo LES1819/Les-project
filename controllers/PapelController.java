@@ -47,94 +47,7 @@ public class PapelController implements Serializable {
     private Map<Papel, Boolean> selectedItems;
     // products to be associated
     private List<Papel> papersOnList;
-    
-    public PapelController() {
-        // map for selected stuff on the JSF page
-        selectedItems = new HashMap<Papel, Boolean>();
-        papersOnList = new ArrayList<>();
-    }
-    
-     private void prepareSelectedList() {
-        papersOnList = new ArrayList<Papel>();
-        for(Papel p : selectedItems.keySet()) {
-            if (selectedItems.get(p) == true) {
-                papersOnList.add(p);
-            }
-        }
-    }
-     
-     //get HashMap
-    public Map<Papel, Boolean> getSelectedItems() {
-        return selectedItems;
-    }
-    
-    public PaginationHelper getPaginationNotAssociated() {
-        if (pagination == null) {
-            pagination = new PaginationHelper(10) {
-
-                @Override
-                public int getItemsCount() {
-                    return getFacade().countNotAssociate();
-                }
-
-                @Override
-                public DataModel createPageDataModel() {
-                    return new ListDataModel(getFacade().getNotAssociated());
-                }
-            };
-        }
-        return pagination;
-    }
-    
-    public String associateAllPapers() {
-        prepareSelectedList();
-        for(int i = 0; i < papersOnList.size(); i++) {
-            associate(papersOnList.get(i));
-        }
-        selectedItems = new HashMap<>();
-        papersOnList = new ArrayList<>();
-        return "associatePapel";
-    }
-    
-    public String prepareAssociate(int ativi){
-        current = new Papel();
-        selectedItemIndex= -1;
-        atividade = new Atividade();
-        atividade.setIdAtividades(ativi);
-        utilizador = new Utilizador();
-        utilizador.setIdUtilizador(1);
-        current.setUtilizadoridUtilizador(utilizador);
-        return "/atividade/associatePapel";
-    }
-    
-    public void associate(Papel p) {
-        current.setIdPapel(p.getIdPapel());
-        current.setDescricao(p.getDescricao());
-        current.setNome(p.getNome());
-        current.setDataCriacao(p.getDataCriacao());
-        
-        association = new PapelhasAtividade();
-        
-        PapelhasAtividadePK pk = new PapelhasAtividadePK(current.getIdPapel(), atividade.getIdAtividades());
-        Date date = new Date();
-        association.setAtividade(atividade);
-        association.setPapel(current);
-        association.setUtilizadoridUtilizador(current.getUtilizadoridUtilizador());
-        association.setPapelhasAtividadePK(pk);
-        association.setDataCriacao(date);
-        papelhasAtividadeFacade.create(association);
-        recreateModel();
-        recreatePagination();
-        JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/resources/Bundle").getString("papelAssociated"));
-    }
-   
-    
-    public String prepareListOfPapers() {
-        recreatePagination();
-        recreateModel();
-        return "/papel/List";
-    }
-
+ 
     public Papel getSelected() {
         if (current == null) {
             current = new Papel();
@@ -182,28 +95,7 @@ public class PapelController implements Serializable {
         return "Create";
     }
     
-    public String myCreate() {
-        Utilizador user = new Utilizador(1);
-        Papel p = new Papel();
-        p.setUtilizadoridUtilizador(user);
-        p.setNome(current.getNome());
-        p.setDescricao(current.getDescricao());
-        current = p;
-        create();
-        return "Create";
-    }
-    
-    public String myUpdate() {
-        Papel p = new Papel(46);
-        Utilizador user = new Utilizador(1);
-        p.setNome(current.getNome());
-        p.setDescricao(current.getDescricao());
-        p.setUtilizadoridUtilizador(user);
-        current = p;
-        update();
-        return "Edit";
-    }
-
+   
     public String create() {
         try {
             getFacade().create(current);
@@ -221,14 +113,6 @@ public class PapelController implements Serializable {
         return "Edit";
     }
     
-    public void destroySelectedList(){
-        prepareSelectedList();
-        for(Papel p: papersOnList){
-            prepareDestroy(p);
-        }
-        selectedItems = new HashMap<>();
-        papersOnList = new ArrayList<>();
-    }
 
     public String update() {
         recreatePagination();
@@ -241,28 +125,6 @@ public class PapelController implements Serializable {
             JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/resources/Bundle").getString("PersistenceErrorOccured"));
             return null;
         }
-    }
-    
-    public void prepareDestroy(Papel p){
-        current = p;
-        destroyAndList();
-    }
-    
-    public String nextNotAssociated() {
-        getPaginationNotAssociated().nextPage();
-        recreateModel();
-        return "List";
-    }
-
-    public String previousNotAssociated() {
-        getPaginationNotAssociated().previousPage();
-        recreateModel();
-        return "List";
-    }
-    
-    public DataModel getItemsNotAssociated() {
-        items = getPaginationNotAssociated().createPageDataModel();
-        return items;
     }
 
     public String destroy() {
@@ -306,23 +168,6 @@ public class PapelController implements Serializable {
         }
     }
     
-    public void destroyPapel(Papel a) {
-        current = a;
-        performDestroyFull();
-        recreatePagination();
-        recreateModel();
-    }
-    
-    private void performDestroyFull() {
-        try {
-            getFacade().destroyPapel(current);
-            getFacade().remove(current);
-            JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/resources/Bundle").getString("PapelDeleted"));
-        } catch (Exception e) {
-            JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/resources/Bundle").getString("PersistenceErrorOccured"));
-        }
-    }
-
     private void updateCurrentItem() {
         int count = getFacade().count();
         if (selectedItemIndex >= count) {
@@ -414,6 +259,164 @@ public class PapelController implements Serializable {
                 throw new IllegalArgumentException("object " + object + " is of type " + object.getClass().getName() + "; expected type: " + Papel.class.getName());
             }
         }
+        
+         private void prepareSelectedList() {
+        papersOnList = new ArrayList<Papel>();
+        for(Papel p : selectedItems.keySet()) {
+            if (selectedItems.get(p) == true) {
+                papersOnList.add(p);
+            }
+        }
+    }
+     
+     //get HashMap
+    public Map<Papel, Boolean> getSelectedItems() {
+        return selectedItems;
+    }
+    
+    public PaginationHelper getPaginationNotAssociated() {
+        if (pagination == null) {
+            pagination = new PaginationHelper(10) {
+
+                @Override
+                public int getItemsCount() {
+                    return getFacade().countNotAssociate();
+                }
+
+                @Override
+                public DataModel createPageDataModel() {
+                    return new ListDataModel(getFacade().getNotAssociated());
+                }
+            };
+        }
+        return pagination;
+    }
+    
+    public String associateAllPapers() {
+        prepareSelectedList();
+        for(int i = 0; i < papersOnList.size(); i++) {
+            associate(papersOnList.get(i));
+        }
+        selectedItems = new HashMap<>();
+        papersOnList = new ArrayList<>();
+        return "associatePapel";
+    }
+    
+    public String prepareAssociate(int ativi){
+        current = new Papel();
+        selectedItemIndex= -1;
+        atividade = new Atividade();
+        atividade.setIdAtividades(ativi);
+        utilizador = new Utilizador();
+        utilizador.setIdUtilizador(1);
+        current.setUtilizadoridUtilizador(utilizador);
+        return "/atividade/associatePapel";
+    }
+    
+    public void associate(Papel p) {
+        current.setIdPapel(p.getIdPapel());
+        current.setDescricao(p.getDescricao());
+        current.setNome(p.getNome());
+        current.setDataCriacao(p.getDataCriacao());
+        
+        association = new PapelhasAtividade();
+        
+        PapelhasAtividadePK pk = new PapelhasAtividadePK(current.getIdPapel(), atividade.getIdAtividades());
+        Date date = new Date();
+        association.setAtividade(atividade);
+        association.setPapel(current);
+        association.setUtilizadoridUtilizador(current.getUtilizadoridUtilizador());
+        association.setPapelhasAtividadePK(pk);
+        association.setDataCriacao(date);
+        papelhasAtividadeFacade.create(association);
+        recreateModel();
+        recreatePagination();
+        JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/resources/Bundle").getString("papelAssociated"));
+    }
+   
+    
+    public String prepareListOfPapers() {
+        recreatePagination();
+        recreateModel();
+        return "/papel/List";
+    }
+        
+         public String myCreate() {
+        Utilizador user = new Utilizador(1);
+        Papel p = new Papel();
+        p.setUtilizadoridUtilizador(user);
+        p.setNome(current.getNome());
+        p.setDescricao(current.getDescricao());
+        current = p;
+        create();
+        return "Create";
+    }
+    
+    public String myUpdate() {
+        Papel p = new Papel(46);
+        Utilizador user = new Utilizador(1);
+        p.setNome(current.getNome());
+        p.setDescricao(current.getDescricao());
+        p.setUtilizadoridUtilizador(user);
+        current = p;
+        update();
+        return "Edit";
+    }
+        
+            public void destroySelectedList(){
+        prepareSelectedList();
+        for(Papel p: papersOnList){
+            prepareDestroy(p);
+        }
+        selectedItems = new HashMap<>();
+        papersOnList = new ArrayList<>();
+    }
+        
+        public void prepareDestroy(Papel p){
+        current = p;
+        destroyAndList();
+    }
+    
+    public String nextNotAssociated() {
+        getPaginationNotAssociated().nextPage();
+        recreateModel();
+        return "List";
+    }
+
+    public String previousNotAssociated() {
+        getPaginationNotAssociated().previousPage();
+        recreateModel();
+        return "List";
+    }
+    
+    public DataModel getItemsNotAssociated() {
+        items = getPaginationNotAssociated().createPageDataModel();
+        return items;
+    }
+        
+         public void destroyPapel(Papel a) {
+        current = a;
+        performDestroyFull();
+        recreatePagination();
+        recreateModel();
+    }
+    
+    private void performDestroyFull() {
+        try {
+            getFacade().destroyPapel(current);
+            getFacade().remove(current);
+            JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/resources/Bundle").getString("PapelDeleted"));
+        } catch (Exception e) {
+            JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/resources/Bundle").getString("PersistenceErrorOccured"));
+        }
+    }
+        
+            public PapelController() {
+        // map for selected stuff on the JSF page
+        selectedItems = new HashMap<Papel, Boolean>();
+        papersOnList = new ArrayList<>();
+    }
+
 
     }
 
