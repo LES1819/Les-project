@@ -43,31 +43,6 @@ public class ProdutoController implements Serializable {
     private Utilizador utilizador;
     private Atividade atividade;
 
-    // map for selected stuff on the JSF page
-    private Map<Produto, Boolean> selectedItems;
-    // products to be associated
-    private List<Produto> productsOnList;
-
-    public ProdutoController() {
-        // map for selected stuff on the JSF page
-        selectedItems = new HashMap<>();
-        productsOnList = new ArrayList<>();
-    }
-
-    private void prepareSelectedList() {
-        productsOnList = new ArrayList<>();
-        for(Produto p : selectedItems.keySet()) {
-            if (selectedItems.get(p) == true) {
-                productsOnList.add(p);
-            }
-        }
-    }
-    
-    //get HashMap
-    public Map<Produto, Boolean> getSelectedItems() {
-        return selectedItems;
-    }
-
     public Produto getSelected() {
         if (current == null) {
             current = new Produto();
@@ -98,24 +73,6 @@ public class ProdutoController implements Serializable {
         return pagination;
     }
 
-    public PaginationHelper getPaginationNotAssociated() {
-        if (pagination == null) {
-            pagination = new PaginationHelper(10) {
-
-                @Override
-                public int getItemsCount() {
-                    return getFacade().countNotAssociate();
-                }
-
-                @Override
-                public DataModel createPageDataModel() {
-                    return new ListDataModel(getFacade().getNotAssociated());
-                }
-            };
-        }
-        return pagination;
-    }
-
     public String prepareList() {
         recreateModel();
         return "List";
@@ -126,90 +83,11 @@ public class ProdutoController implements Serializable {
         selectedItemIndex = pagination.getPageFirstItem() + getItems().getRowIndex();
         return "View";
     }
-
-      public String prepareCreate() {
-        current = new Produto();
-        selectedItemIndex = -1;
-        utilizador = new Utilizador();
-        utilizador.setIdUtilizador(1);
-        current.setUtilizadoridUtilizador(utilizador);
-        return "Create";
-    }
-
-    public String create() {
-        recreateModel();
-        recreatePagination();
-        try {
-            getFacade().create(current);
-            JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/resources/Bundle").getString("ProdutoCreated"));
-            return prepareCreate();
-        } catch (Exception e) {
-            JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/resources/Bundle").getString("PersistenceErrorOccured"));
-            return null;
-        }
-    }
     
-    public String prepareAssociate(int ativi) {
-        current = new Produto();
-        selectedItemIndex= -1;
-        atividade = new Atividade();
-        atividade.setIdAtividades(ativi);
-        utilizador = new Utilizador();
-        utilizador.setIdUtilizador(1);
-        current.setUtilizadoridUtilizador(utilizador);
-        return "/atividade/associateProduct";
-    }
-   
-    
-    public String associateAllProducts() {
-        prepareSelectedList();
-        for(int i = 0; i < productsOnList.size(); i++) {
-            associate(productsOnList.get(i));
-        }
-        selectedItems = new HashMap<>();
-        return "associateProduct";
-    }
-    
-   public void associate(Produto p) {
-        current.setIdProduto(p.getIdProduto());
-        current.setDataCriacao(p.getDataCriacao());
-        current.setNome(p.getNome());
-        current.setTipo(p.getTipo());
-        
-        Date date = new Date();
-        ProdutohasAtividade association = new ProdutohasAtividade();
-        ProdutohasAtividadePK pk = new ProdutohasAtividadePK(current.getIdProduto(), atividade.getIdAtividades());
-        association.setAtividade(atividade);
-        association.setProduto(current);
-        association.setUtilizadoridUtilizador(current.getUtilizadoridUtilizador());
-        association.setProdutohasAtividadePK(pk);
-        association.setDataCriacao(date);
-        
-        produtohasAtividadeFacade.create(association);
-        recreateModel();
-        recreatePagination();
-        JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/resources/Bundle").getString("produtoAssociated"));
-
-    }
-
-    public String prepareListOfProducts() {
-        recreatePagination();
-        recreateModel();
-        return "/produto/List";
-    }
-
     public String prepareEdit() {
         current = (Produto) getItems().getRowData();
         selectedItemIndex = pagination.getPageFirstItem() + getItems().getRowIndex();
         return "Edit";
-    }
-
-    public String destroyAndList() {
-        performDestroyFull();
-        recreateModel();
-        updateCurrentItem();
-        recreateModel();
-        return "List";
     }
     
     public String update() {
@@ -223,45 +101,6 @@ public class ProdutoController implements Serializable {
             JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/resources/Bundle").getString("PersistenceErrorOccured"));
             return null;
         }
-    }
-
-    
-    /* acrestcenti*/
-    public void destroyProduto(Produto a) {
-        current = a;
-        performDestroyFull();
-        recreatePagination();
-        recreateModel();
-    }
-
-    public String destroyProducts() {
-        prepareSelectedList();
-        for (int i = 0; i < productsOnList.size(); i++) {
-            destroyProduto(productsOnList.get(i));
-        }
-        selectedItems = new HashMap<>();
-        return "List";
-    }
-    
-    private void performDestroyFull() {
-        try {
-            getFacade().destroyProduto(current);
-            getFacade().remove(current);
-            JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/resources/Bundle").getString("AtividadeDeleted"));
-        } catch (Exception e) {
-            JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/resources/Bundle").getString("PersistenceErrorOccured"));
-        }
-    }
-    
-    
-    /*final acrecesto*/
-    public String destroy() {
-        current = (Produto) getItems().getRowData();
-        selectedItemIndex = pagination.getPageFirstItem() + getItems().getRowIndex();
-        performDestroy();
-        recreatePagination();
-        recreateModel();
-        return "List";
     }
 
     public String destroyAndView() {
@@ -308,11 +147,6 @@ public class ProdutoController implements Serializable {
         return items;
     }
 
-    public DataModel getItemsNotAssociated() {
-        items = getPaginationNotAssociated().createPageDataModel();
-        return items;
-    }
-
     private void recreateModel() {
         items = null;
     }
@@ -329,18 +163,6 @@ public class ProdutoController implements Serializable {
 
     public String previous() {
         getPagination().previousPage();
-        recreateModel();
-        return "List";
-    }
-
-    public String nextNotAssociated() {
-        getPaginationNotAssociated().nextPage();
-        recreateModel();
-        return "List";
-    }
-
-    public String previousNotAssociated() {
-        getPaginationNotAssociated().previousPage();
         recreateModel();
         return "List";
     }
@@ -396,4 +218,184 @@ public class ProdutoController implements Serializable {
         }
 
     }
+    
+    // start of our code
+    
+     // map for selected stuff on the JSF page
+    private Map<Produto, Boolean> selectedItems;
+    // products to be associated
+    private List<Produto> productsOnList;
+
+    public ProdutoController() {
+        // map for selected stuff on the JSF page
+        selectedItems = new HashMap<>();
+        productsOnList = new ArrayList<>();
+    }
+
+    private void prepareSelectedList() {
+        productsOnList = new ArrayList<>();
+        for(Produto p : selectedItems.keySet()) {
+            if (selectedItems.get(p) == true) {
+                productsOnList.add(p);
+            }
+        }
+    }
+    
+    //get HashMap
+    public Map<Produto, Boolean> getSelectedItems() {
+        return selectedItems;
+    }
+    
+    public PaginationHelper getPaginationNotAssociated() {
+        if (pagination == null) {
+            pagination = new PaginationHelper(10) {
+
+                @Override
+                public int getItemsCount() {
+                    return getFacade().countNotAssociate();
+                }
+
+                @Override
+                public DataModel createPageDataModel() {
+                    return new ListDataModel(getFacade().getNotAssociated());
+                }
+            };
+        }
+        return pagination;
+    }
+    
+    public String prepareCreate() {
+        current = new Produto();
+        selectedItemIndex = -1;
+        utilizador = new Utilizador();
+        utilizador.setIdUtilizador(1);
+        current.setUtilizadoridUtilizador(utilizador);
+        return "Create";
+    }
+
+    public String create() {
+        recreateModel();
+        recreatePagination();
+        try {
+            getFacade().create(current);
+            JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/resources/Bundle").getString("ProdutoCreated"));
+            return prepareCreate();
+        } catch (Exception e) {
+            JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/resources/Bundle").getString("PersistenceErrorOccured"));
+            return null;
+        }
+    }
+    
+     public String prepareAssociate(int ativi) {
+        current = new Produto();
+        selectedItemIndex= -1;
+        atividade = new Atividade();
+        atividade.setIdAtividades(ativi);
+        utilizador = new Utilizador();
+        utilizador.setIdUtilizador(1);
+        current.setUtilizadoridUtilizador(utilizador);
+        return "/atividade/associateProduct";
+    }
+   
+    
+    public String associateAllProducts() {
+        prepareSelectedList();
+        for(int i = 0; i < productsOnList.size(); i++) {
+            associate(productsOnList.get(i));
+        }
+        selectedItems = new HashMap<>();
+        return "associateProduct";
+    }
+    
+   public void associate(Produto p) {
+        current.setIdProduto(p.getIdProduto());
+        current.setDataCriacao(p.getDataCriacao());
+        current.setNome(p.getNome());
+        current.setTipo(p.getTipo());
+        
+        Date date = new Date();
+        ProdutohasAtividade association = new ProdutohasAtividade();
+        ProdutohasAtividadePK pk = new ProdutohasAtividadePK(current.getIdProduto(), atividade.getIdAtividades());
+        association.setAtividade(atividade);
+        association.setProduto(current);
+        association.setUtilizadoridUtilizador(current.getUtilizadoridUtilizador());
+        association.setProdutohasAtividadePK(pk);
+        association.setDataCriacao(date);
+        
+        produtohasAtividadeFacade.create(association);
+        recreateModel();
+        recreatePagination();
+        JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/resources/Bundle").getString("produtoAssociated"));
+
+    }
+
+    public String prepareListOfProducts() {
+        recreatePagination();
+        recreateModel();
+        return "/produto/List";
+    }
+    
+        public String destroyAndList() {
+        performDestroyFull();
+        recreateModel();
+        updateCurrentItem();
+        recreateModel();
+        return "List";
+    }
+    
+     /* acrestcenti*/
+    public void destroyProduto(Produto a) {
+        current = a;
+        performDestroyFull();
+        recreatePagination();
+        recreateModel();
+    }
+
+    public String destroyProducts() {
+        prepareSelectedList();
+        for (int i = 0; i < productsOnList.size(); i++) {
+            destroyProduto(productsOnList.get(i));
+        }
+        selectedItems = new HashMap<>();
+        return "List";
+    }
+    
+    private void performDestroyFull() {
+        try {
+            getFacade().destroyProduto(current);
+            getFacade().remove(current);
+            JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/resources/Bundle").getString("AtividadeDeleted"));
+        } catch (Exception e) {
+            JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/resources/Bundle").getString("PersistenceErrorOccured"));
+        }
+    }
+    
+    
+    /*final acrecesto*/
+    public String destroy() {
+        current = (Produto) getItems().getRowData();
+        selectedItemIndex = pagination.getPageFirstItem() + getItems().getRowIndex();
+        performDestroy();
+        recreatePagination();
+        recreateModel();
+        return "List";
+    }
+    
+        public DataModel getItemsNotAssociated() {
+        items = getPaginationNotAssociated().createPageDataModel();
+        return items;
+    }
+    
+      public String nextNotAssociated() {
+        getPaginationNotAssociated().nextPage();
+        recreateModel();
+        return "List";
+    }
+
+    public String previousNotAssociated() {
+        getPaginationNotAssociated().previousPage();
+        recreateModel();
+        return "List";
+    }
+    
 }
