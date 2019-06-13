@@ -235,7 +235,7 @@ public class PadraoController implements Serializable {
             }
             if (object instanceof Padrao) {
                 Padrao o = (Padrao) object;
-                return getStringKey(o.getIdPadrão());
+                return getStringKey(o.getIdPadrao());
             } else {
                 throw new IllegalArgumentException("object " + object + " is of type " + object.getClass().getName() + "; expected type: " + Padrao.class.getName());
             }
@@ -249,6 +249,7 @@ public class PadraoController implements Serializable {
     private Atividade atividade;
     private Utilizador utilizador;
     private AtividadehasPadrao association;
+    @EJB
     private AtividadehasPadraoFacade atividadehasPadraoFacade;
     private Map<Padrao, Boolean> selectedItems;
     private List<Padrao> patternsOnList;
@@ -260,29 +261,31 @@ public class PadraoController implements Serializable {
         utilizador = new Utilizador();
         utilizador.setIdUtilizador(1);
         current.setUtilizadoridUtilizador(utilizador);
-        return "/atividade/associate";
+        selectedItems = new HashMap<Padrao,Boolean>();
+        return "/atividade/associatePadrao";
     }
     
     public void associate(Padrao p) {
-        current.setIdPadrão(p.getIdPadrão());
+        current.setIdPadrao(p.getIdPadrao());
         current.setDescricao(p.getDescricao());
         current.setNome(p.getNome());
         current.setDataCriacao(p.getDataCriacao());
+        current.setImg(p.getImg());
         
         association = new AtividadehasPadrao();
         
-        AtividadehasPadraoPK pk = new AtividadehasPadraoPK(current.getIdPadrão(), atividade.getIdAtividades());
-        Date date = new Date();
+        AtividadehasPadraoPK pk = new AtividadehasPadraoPK(atividade.getIdAtividades(), current.getIdPadrao());
         association.setAtividade(atividade);
         association.setPadrao(current);
         association.setUtilizadoridUtilizador(current.getUtilizadoridUtilizador());
         association.setAtividadehasPadraoPK(pk);
-        association.setDataCriacao(date);
+        association.setDataCriacao(new Date());
         atividadehasPadraoFacade.create(association);
         recreateModel();
         recreatePagination();
         JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/resources/Bundle").getString("PadraoAssociated"));
     }
+    
     
      public DataModel getItemsNotAssociated() {
         items = getPaginationNotAssociated().createPageDataModel();
@@ -332,7 +335,7 @@ public class PadraoController implements Serializable {
         }
         selectedItems = new HashMap<>();
         patternsOnList = new ArrayList<>();
-        return "associatePapel";
+        return "associatePadrao";
     }
      
      public Map<Padrao, Boolean> getSelectedItems() {
@@ -341,6 +344,7 @@ public class PadraoController implements Serializable {
      
      private void prepareSelectedList() {
         patternsOnList = new ArrayList<Padrao>();
+        System.out.println(selectedItems);
         for(Padrao p : selectedItems.keySet()) {
             if (selectedItems.get(p) == true) {
                 patternsOnList.add(p);
