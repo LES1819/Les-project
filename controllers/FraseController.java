@@ -29,6 +29,7 @@ import jpa.entities.Agrupamento;
 import jpa.entities.AgrupamentohasFrase;
 import jpa.entities.AgrupamentohasFrasePK;
 import jpa.entities.Utilizador;
+import jpa.session.AgrupamentohasFraseFacade;
 import static org.apache.taglibs.standard.functions.Functions.containsIgnoreCase;
 
 @Named("fraseController")
@@ -40,14 +41,12 @@ public class FraseController implements Serializable {
     private DataModel itemsNotAssociated =  null;
     @EJB
     private jpa.session.FraseFacade ejbFacade;
-    private jpa.session.AgrupamentohasFraseFacade ejAgrupFacade;
+    @EJB
+    private AgrupamentohasFraseFacade agrupamentohasFraseFacade;
     private PaginationHelper pagination;
     private int selectedItemIndex;
     
-    //pesquisa
-    private String pesquisa, destinatario = "", sujeito="", verbo="";
-    private int data = 0;
-    private Boolean andB  = false;
+    
     
     
     private Map<Frase, Boolean> selectedItems = new HashMap<Frase, Boolean>();
@@ -55,9 +54,27 @@ public class FraseController implements Serializable {
     //associacoes a agrupamentos
     private Agrupamento agrupamento; //isso é para fazer a associação ao agrupamento
     private Utilizador utilizador;
+    private List<Frase> frasesOnList;
+    private DataModel items_possible = null; //itens que posso associar ao agrupamento
+    private Boolean facil = true; //este boolean está mal escrito
     
+    //pesquisa
+    private String pesquisa, destinatario = "", sujeito="", verbo="";
+    private int data = 0;
+    private Boolean andB  = false;
+    //ordenacao
     boolean order_dest = true, order_data = true, order_sujeito = true, order_verbo = true;
+    
+    private AgrupamentohasFrase association;
 
+    public DataModel getItems_possible() {
+        return items_possible;
+    }
+
+    public void setItems_possible(DataModel items_possible) {
+        this.items_possible = items_possible;
+    }
+    
     public Map<Frase, Boolean> getSelectedItems() {
         return selectedItems;
     }
@@ -121,10 +138,6 @@ public class FraseController implements Serializable {
     public void setData(int data) {
         this.data = data;
     }
-
-    
-    
-    private List<Frase> frasesOnList;
 
     public FraseController() {
         selectedItems = new HashMap<>();
@@ -243,7 +256,7 @@ public class FraseController implements Serializable {
         order_dest = !order_dest;
     }
     
-    
+    //-------------PESQUISA--------------------
     /**
      * pesquisa global
      */
@@ -341,7 +354,7 @@ public class FraseController implements Serializable {
         items = getItems(); 
     }
     
-    
+    //-------------------------------------------
 
     private FraseFacade getFacade() {
         return ejbFacade;
@@ -565,7 +578,7 @@ public class FraseController implements Serializable {
              }
 
        }
-    
+    /*
     public String associateSelectedList(){
         prepareSelectedList();
         for(Frase a : frasesOnList){
@@ -587,64 +600,68 @@ public class FraseController implements Serializable {
         recreateModel();
         return "/agrupamento/View";
     }
+    */
+    
+    
        
-    public String prepareAssociate(int agrup){
-        /*
-        ir buscar o has frase
-        ir buscar a lista de frases
-        fazer um menos o outro
-        ta feito
-        ganhamos o jogo
-        */
-        //query para ver as frases associadas - metes o inverso num array chamado itensnotassociated
-        /*
-        todas as frases
-        percorrer as frases e para cada uma ver se o id e o agrupamento esta no hasfrase
-        se retornar null é fixe mete se no notassociate
-        
-        
-        
-        DataModel frases_existentes = new ListDataModel(getFacade().findAll());
-        Iterator<Frase> frases = frases_existentes.iterator();
-        boolean found = true;
-        List <Frase> tba = new ArrayList<>();
-        while(frases.hasNext()){
-            Frase a = frases.next();
-            //System.out.println(ejAgrupFacade.findIdFraseIdAgrup());
-            //DataModel<AgrupamentohasFrase> coco2 = new ListDataModel<>(ejAgrupFacade.findIdFraseIdAgrup());
-            //found = coco.findIdFraseIdAgrup(a.getIdFrase(), agrup);
-            if(found){
-                tba.add(a);
+    
+    private void prepareItemsPossible(int id_agrup){
+        List<AgrupamentohasFrase> associadas = getFacade().pesquisaFrasesAssociadas(id_agrup);
+        List<Frase> todas = getFacade().findAll();
+        List<Frase> result = new ArrayList<Frase>();
+        for(Frase a: todas){
+            result.add(a);
+            for(AgrupamentohasFrase k: associadas){
+                if(a.getIdFrase() == k.getFrase().getIdFrase()){
+                    result.remove(result.size()-1);
+                    break;
+                }
             }
         }
-        ListDataModel<Frase> lF = new ListDataModel<>(tba);
-        this.itemsNotAssociated = getPagination().createPageDataModel();
-        this.itemsNotAssociated = lF;//new ListDataModel<>(tba);
-        
-        this.agrupamentoId = agrup;
-        recreateModel();
-        return "/agrupamento/associateFrase";
-        */
+        items_possible = new ListDataModel(result);        
+    }
+    
+    public String prepareAssociate(Agrupamento agrup){
         current = new Frase();
         selectedItemIndex= -1;
-        agrupamento = new Agrupamento();
-        agrupamento.setIdAgrupamento(agrup);
+        agrupamento = agrup;
         utilizador = new Utilizador();
         utilizador.setIdUtilizador(1);
         current.setUtilizadoridUtilizador(utilizador);
-        return "/agrupamento/associateFrase";
+        prepareItemsPossible(agrup.getIdAgrupamento());
+            return "AssociarFrases";
+        
+        
     }
-/*    
-    public void FinalAssociate(Frase a){        
-        current.setIdFrase(0);
-        current.setNome(a.getNome());
-        current.setDescricao(a.getDescricao());
-        current.setDataCriacao(new Date(System.currentTimeMillis()));
-        current.setIdAtividadeOriginal(a);
-        associate();
-        recreatePagination();
+    
+    public String associateAllFrases() {
+        prepareSelectedList();
+        for(int i = 0; i < frasesOnList.size(); i++) {
+            associate(frasesOnList.get(i));
+        }
+        selectedItems = new HashMap<>();
+        frasesOnList = new ArrayList<>();
+        return "List";
+    }
+    
+    public void associate(Frase f) {
+        current = f;
+        
+        association = new AgrupamentohasFrase();
+        
+        AgrupamentohasFrasePK pk = new AgrupamentohasFrasePK(agrupamento.getIdAgrupamento(), current.getIdFrase());
+        Date date = new Date();
+        association.setAgrupamento(agrupamento);
+        association.setFrase(current);
+        association.setUtilizadoridUtilizador(current.getUtilizadoridUtilizador());
+        association.setAgrupamentohasFrasePK(pk);
+        association.setDataCriacao(date);
+        agrupamentohasFraseFacade.create(association);
         recreateModel();
-    }*/
+        recreatePagination();
+        JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/resources/Bundle").getString("fraseAssociated"));
+    }
+    
     public ListDataModel<Frase> getFrases(){
         return new ListDataModel(getFacade().findAll());
     }
