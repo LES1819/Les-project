@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:composition template="/template.xhtml">
+        <ui:define name="title">
+            <h:outputText value="#{bundle.EditVerboTitle}"></h:outputText>
+        </ui:define>
+        <ui:define name="body">
+            <h:panelGroup id="messagePanel" layout="block">
+                <h:messages errorStyle="color: red" infoStyle="color: green" layout="table"/>
+            </h:panelGroup>
+            <h:form>
+                <h:panelGrid columns="2">
+                    <h:outputLabel value="#{bundle.EditVerboLabel_verboPK_nome}" for="verboPK_nome" />
+                    <h:inputText id="verboPK_nome" value="#{verboController.selected.verboPK.nome}" title="#{bundle.EditVerboTitle_verboPK_nome}" required="true" requiredMessage="#{bundle.EditVerboRequiredMessage_verboPK_nome}"/>
+                    <h:outputLabel value="#{bundle.EditVerboLabel_tipo}" for="tipo" />
+                    <h:selectOneMenu value="#{verboController.selected.tipo}" >
+                        <f:selectItem itemValue="produtivo" itemLabel="produtivo" />
+                        <f:selectItem itemValue="comunicativo" itemLabel="comunicativo" />
+                    </h:selectOneMenu>
+                </h:panelGrid>
+                <h:commandLink action="#{verboController.update}" value="#{bundle.EditVerboSaveLink}"/>
+                <br />
+                <br />
+                <h:link outcome="View" value="#{bundle.EditVerboViewLink}"/>
+                <br />
+                <h:commandLink action="#{verboController.prepareList}" value="#{bundle.EditVerboShowAllLink}" immediate="true"/>
+                <br />
+                <br />
+                <h:link outcome="/index" value="#{bundle.EditVerboIndexLink}" />
+            </h:form>
+        </ui:define>
+    </ui:composition>
+
+</html>
