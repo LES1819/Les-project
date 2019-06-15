@@ -73,4 +73,8 @@ public class FraseFacade extends AbstractFacade<Frase> {
         //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
+    public List pesquisaFrasesAssociadas(int id_agrup){
+        return em.createNamedQuery("AgrupamentohasFrase.findByAgrupamentoidAgrupamento").setParameter("agrupamentoidAgrupamento", id_agrup).getResultList();
+    }
+    
 }
