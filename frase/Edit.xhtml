@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:composition template="/template.xhtml">
+        <ui:define name="title">
+            <h:outputText value="#{bundle.EditFraseTitle}"></h:outputText>
+        </ui:define>
+        <ui:define name="body">
+            <h:panelGroup id="messagePanel" layout="block">
+                <h:messages errorStyle="color: red" infoStyle="color: green" layout="table"/>
+            </h:panelGroup>
+            <h:form>
+                <h:panelGrid columns="2">
+                    <h:outputLabel value="#{bundle.EditFraseLabel_destinatario}" for="destinatario" />
+                    <h:inputText id="destinatario" value="#{fraseController.selected.destinatario}" title="#{bundle.EditFraseTitle_destinatario}" />
+                    <h:outputLabel value="#{bundle.EditFraseLabel_recurso}" for="recurso" />
+                    <h:inputText id="recurso" value="#{fraseController.selected.recurso}" title="#{bundle.EditFraseTitle_recurso}" />
+                    <h:outputLabel value="#{bundle.EditFraseLabel_artefactosidArtefactos}" for="artefactosidArtefactos" />
+                    <h:selectOneMenu id="artefactosidArtefactos" value="#{fraseController.selected.artefactosidArtefactos}" title="#{bundle.EditFraseTitle_artefactosidArtefactos}" >
+                        <f:selectItems value="#{artefactosController.itemsAvailableSelectOne}"/>
+                    </h:selectOneMenu>
+                    <h:outputLabel value="#{bundle.EditFraseLabel_sujeitoidSujeito}" for="sujeitoidSujeito" />
+                    <h:selectOneMenu id="sujeitoidSujeito" value="#{fraseController.selected.sujeitoidSujeito}" title="#{bundle.EditFraseTitle_sujeitoidSujeito}" required="true" requiredMessage="#{bundle.EditFraseRequiredMessage_sujeitoidSujeito}">
+                        <f:selectItems value="#{sujeitoController.itemsAvailableSelectOne}"/>
+                    </h:selectOneMenu>
+                    <h:outputLabel value="#{bundle.EditFraseLabel_utilizadoridUtilizador}" for="utilizadoridUtilizador" />
+                    <h:selectOneMenu id="utilizadoridUtilizador" value="#{fraseController.selected.utilizadoridUtilizador}" title="#{bundle.EditFraseTitle_utilizadoridUtilizador}" required="true" requiredMessage="#{bundle.EditFraseRequiredMessage_utilizadoridUtilizador}">
+                        <f:selectItems value="#{utilizadorController.itemsAvailableSelectOne}"/>
+                    </h:selectOneMenu>
+                    <h:outputLabel value="#{bundle.EditFraseLabel_verbo}" for="verbo" />
+                    <h:selectOneMenu id="verbo" value="#{fraseController.selected.verbo}" title="#{bundle.EditFraseTitle_verbo}" required="true" requiredMessage="#{bundle.EditFraseRequiredMessage_verbo}">
+                        <f:selectItems value="#{verboController.itemsAvailableSelectOne}"/>
+                    </h:selectOneMenu>
+                </h:panelGrid>
+                <h:commandLink action="#{fraseController.update}" value="#{bundle.EditFraseSaveLink}"/>
+                <br />
+                <br />
+                <h:link outcome="View" value="#{bundle.EditFraseViewLink}"/>
+                <br />
+                <h:commandLink action="#{fraseController.prepareList}" value="#{bundle.EditFraseShowAllLink}" immediate="true"/>
+                <br />
+                <br />
+                <h:link outcome="/index" value="#{bundle.EditFraseIndexLink}" />
+            </h:form>
+        </ui:define>
+    </ui:composition>
+
+</html>

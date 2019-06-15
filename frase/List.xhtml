@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:composition template="/template.xhtml">
+        <ui:define name="title">
+            <h:outputText value="#{bundle.ListFraseTitle}"></h:outputText>
+        </ui:define>
+        <ui:define name="body">
+            <h:form styleClass="jsfcrud_list_form">
+                <h:outputText value="Pesquisa"></h:outputText>
+                <h:inputText id="pesquisa" value="#{fraseController.pesquisa}"></h:inputText>
+                    <h:commandLink action="#{fraseController.pesquisar}">
+    				PesquisaAqui
+                    </h:commandLink>
+                <h:commandLink action="#{fraseController.limparFiltros}">
+    				Limpar Filtros
+                    </h:commandLink>
+                
+                
+               
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"><i class="fas fa-plus"></i></span>
+                  </button>
+                  <div class="collapse navbar-collapse" id="navbarNav">
+                     <ul class="navbar-nav">
+                      <li class="nav-item active">
+                          <h:outputText value="Destinatário"></h:outputText>
+                          <h:inputText id="destinatario" value="#{fraseController.destinatario}"></h:inputText>
+                      </li>
+                      <li class="nav-item">
+                          <h:outputText value="Sujeito"></h:outputText>
+                          <h:inputText id="sujeito" value="#{fraseController.sujeito}"></h:inputText>
+                      </li>
+                      <li class="nav-item">
+                          <h:outputText value="Verbo"></h:outputText>
+                          <h:inputText id="verbo" value="#{fraseController.verbo}"></h:inputText>
+                      </li>
+                      <li class="nav-item">
+                          <h:outputText value="Data"></h:outputText>
+                          <h:selectOneMenu value="#{fraseController.data}" >
+                                <f:selectItem itemValue="0" itemLabel="" />
+                                <f:selectItem itemValue="1" itemLabel="1 dia" />
+                                <f:selectItem itemValue="7" itemLabel="1 semana" />
+                                <f:selectItem itemValue="30" itemLabel="1 mes" />
+                                <f:selectItem itemValue="365" itemLabel="1 ano" />
+                          </h:selectOneMenu>
+                      </li>
+                    </ul>
+                      <h:selectBooleanCheckbox  id="andB" value="#{fraseController.andB}">Conter todos os filtros</h:selectBooleanCheckbox>
+                      <h:commandLink action="#{fraseController.pesquisaAvancada}">
+    				Pesquisa Avancada
+                    </h:commandLink>
+                  </div>
+                <br />
+                <h:panelGroup id="messagePanel" layout="block">
+                    <h:messages errorStyle="color: red" infoStyle="color: green" layout="table"/>
+                </h:panelGroup>
+                <h:outputText escape="false" value="#{bundle.ListFraseEmpty}" rendered="#{fraseController.items.rowCount == 0}"/>
+                <h:panelGroup rendered="#{fraseController.items.rowCount > 0}">
+                    <h:outputText value="#{fraseController.pagination.pageFirstItem + 1}..#{fraseController.pagination.pageLastItem + 1}/#{fraseController.pagination.itemsCount}"/>&nbsp;
+                    <h:commandLink action="#{fraseController.previous}" value="#{bundle.Previous} #{fraseController.pagination.pageSize}" rendered="#{fraseController.pagination.hasPreviousPage}"/>&nbsp;
+                    <h:commandLink action="#{fraseController.next}" value="#{bundle.Next} #{fraseController.pagination.pageSize}" rendered="#{fraseController.pagination.hasNextPage}"/>&nbsp;
+                    <h:dataTable value="#{fraseController.items}" var="item" border="0" cellpadding="2" cellspacing="0" rowClasses="jsfcrud_odd_row,jsfcrud_even_row" rules="all" style="border:solid 1px">
+                        <h:column>
+                            <f:facet name ="header">
+                                <h:selectBooleanCheckbox onclick="toggleAll2()"></h:selectBooleanCheckbox>
+                            </f:facet>
+                            <h:selectBooleanCheckbox class="check[]" onclick="togglefrase()" value="#{fraseController.selectedItems[item]}"></h:selectBooleanCheckbox>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">
+                                <h:commandLink action="#{fraseController.ordenarSujeito}">
+                                    <h:outputText value="#{bundle.ListFraseTitle_sujeitoidSujeito}"/>
+                                </h:commandLink>
+                            </f:facet>
+                            <h:outputText value="#{item.sujeitoidSujeito.nome}"/>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">
+                                <h:commandLink action="#{fraseController.ordenarVerbo}">
+                                    <h:outputText value="#{bundle.ListFraseTitle_verbo}"/>
+                                </h:commandLink>
+                            </f:facet>
+                            <h:outputText value="#{item.verbo.verboPK.nome}"/>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">
+                                <h:commandLink action="#{fraseController.ordenarDestinatario}">
+                                    <h:outputText value="#{bundle.ListFraseTitle_destinatario}"/>
+                               </h:commandLink>
+                            </f:facet>
+                            <h:outputText value="#{item.destinatario}"/>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">
+                                <h:commandLink action="#{fraseController.ordenarData}">
+                                    <h:outputText value="#{bundle.ListFraseTitle_datCriacao}"/>
+                                </h:commandLink>
+                            </f:facet>
+                            <h:outputText value="#{item.datCriacao}">
+                                <f:convertDateTime pattern="MM/dd/yyyy HH:mm:ss" />
+                            </h:outputText>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="&nbsp;"/>
+                            </f:facet>
+                            <h:commandLink action="#{fraseController.prepareView}" value="#{bundle.ListFraseViewLink}"/>
+                            <h:outputText value=" "/>
+                            <h:commandLink action="#{fraseController.prepareEdit}" value="#{bundle.ListFraseEditLink}"/>
+                            <h:outputText value=" "/>
+                            <h:commandLink action="#{fraseController.destroy}" value="#{bundle.ListFraseDestroyLink}"/>
+                        </h:column>
+                    </h:dataTable>
+                </h:panelGroup>
+                <br />
+                <h:commandLink action="#{fraseController.prepareCreate}" value="#{bundle.ListFraseCreateLink}"/>
+                <button type="button" class="check btn btn-danger" data-toggle="modal" data-target="#exampleModal" disabled="false"><span>Apagar</span></button>
+                <br />
+                <br />
+                <div class="modal fade"  id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLabel">Apagar a(s) Frase(s)?</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p id="modalid">Irá apagar esta(s) frases e as suas associações a agrupamentos.</p>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                                            <h:commandButton class="btn btn-primary" action="#{fraseController.destroyFrases()}" value="Apagar"></h:commandButton>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+            </h:form>
+            <h:outputScript library ="javascript" name ="checkboxes.js" />
+        </ui:define>
+    </ui:composition>
+
+</html>
