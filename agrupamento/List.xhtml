@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:composition template="/template.xhtml">
+        <ui:define name="title">
+            <h:outputText value="#{bundle.ListAgrupamentoTitle}"></h:outputText>
+        </ui:define>
+        <ui:define name="body">
+            <h:form styleClass="jsfcrud_list_form" style="margin-top: 8%;" >
+                
+                <h:panelGroup id="messagePanel" layout="block">
+                    <h:messages errorStyle="color: red" infoStyle="color: green" layout="table"/>
+                </h:panelGroup>
+                
+                <h:outputText escape="false" value="#{bundle.ListAgrupamentoEmpty}" rendered="#{agrupamentoController.items.rowCount == 0}"/>
+                <h:panelGroup rendered="#{agrupamentoController.items.rowCount > 0}">
+                    <h:outputText value="#{agrupamentoController.pagination.pageFirstItem + 1}..#{agrupamentoController.pagination.pageLastItem + 1}/#{agrupamentoController.pagination.itemsCount}"/>&nbsp;
+                    <h:commandLink action="#{agrupamentoController.previous}" value="#{bundle.Previous} #{agrupamentoController.pagination.pageSize}" rendered="#{agrupamentoController.pagination.hasPreviousPage}"/>&nbsp;
+                    <h:commandLink  action="#{agrupamentoController.next}" value="#{bundle.Next} #{agrupamentoController.pagination.pageSize}" rendered="#{agrupamentoController.pagination.hasNextPage}"/>&nbsp;
+                    
+                    <div style="float: right;">
+                        <h:commandLink class="btn btn-primary" action="#{agrupamentoController.prepareCreate}" value="#{bundle.ListAgrupamentoCreateLink}"/>
+                        <button type="button" class="check btn btn-danger" data-toggle="modal" data-target="#exampleModal" disabled="false"><span>Apagar</span></button>
+                    </div>
+                    
+                    
+                    
+                    <h:dataTable value="#{agrupamentoController.items}" var="item" border="0" cellpadding="2" cellspacing="0" rowClasses="jsfcrud_odd_row,jsfcrud_even_row" rules="all" style="border:solid 1px">
+                        <h:column>
+                            <f:facet name ="header">
+                                <h:selectBooleanCheckbox onclick="toggleAll2()"></h:selectBooleanCheckbox>
+                            </f:facet>
+                            <h:selectBooleanCheckbox class="check[]" onclick="toggleAgrupamentos()" value="#{agrupamentoController.selectedItems[item]}"></h:selectBooleanCheckbox>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ListAgrupamentoTitle_nome}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.nome}"/>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ListAgrupamentoTitle_descricao}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.descricao}"/>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ListAgrupamentoTitle_dataCriacao}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.dataCriacao}">
+                                <f:convertDateTime pattern="MM/dd/yyyy HH:mm:ss" />
+                            </h:outputText>
+                        </h:column>
+                        
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="&nbsp;"/>
+                            </f:facet>
+                            <h:commandLink action="#{agrupamentoController.prepareView}" value="#{bundle.ListAgrupamentoViewLink}"/>
+                            <h:outputText value=" "/>
+                            <h:commandLink action="#{fraseController.prepareAssociate(item)}" value="Associar frases"/>
+                            <h:outputText value=" "/>
+                            
+                            
+                        </h:column>
+                    </h:dataTable>
+                </h:panelGroup>
+                <br />
+                
+                <br />
+                <br />
+                <div class="modal fade"  id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLabel">Apagar o(s) Agrupamento(s)?</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p id="modalid">Irá apagar este(s) agrupamentos e as suas associações a frases e padrões.</p>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                                            <h:commandButton class="btn btn-primary" action="#{agrupamentoController.destroyAgrupamentos()}" value="Apagar"></h:commandButton>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+            </h:form>
+            <h:outputScript library ="javascript" name ="checkboxes.js" />
+        </ui:define>
+    </ui:composition>
+
+</html>
