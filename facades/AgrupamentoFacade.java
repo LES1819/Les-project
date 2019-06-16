@@ -5,10 +5,12 @@
  */
 package jpa.session;
 
+import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import jpa.entities.Agrupamento;
+import jpa.entities.AgrupamentohasFrase;
 
 /**
  *
@@ -27,6 +29,20 @@ public class AgrupamentoFacade extends AbstractFacade<Agrupamento> {
 
     public AgrupamentoFacade() {
         super(Agrupamento.class);
+    }
+    
+    public List pesquisaFrase(int id) {
+        return em.createNamedQuery("AgrupamentohasFrase.findByAgrupamentoidAgrupamento").setParameter("agrupamentoidAgrupamento", id).getResultList();
+    }
+    public List pesquisaPadrao(int id) {
+        return em.createNamedQuery("AgrupamentohasPadrao.findByAgrupamentoidAgrupamento").setParameter("agrupamentoidAgrupamento", id).getResultList();
+    }
+    
+    public List findByIdFraseIdAgrup(int idFrase, int idAgrup){
+        return em.createNamedQuery("AgrupamentohasFrase.findByIdFraseIdAgrup").setParameter("idAgrup", idAgrup).setParameter("idFrase", idFrase).getResultList();
+    }
+    public List findByIdPadraoIdAgrup(int idPadrao, int idAgrup){
+        return em.createNamedQuery("AgrupamentohasPadrao.findByIdPadraoIdAgrup").setParameter("idAgrup", idAgrup).setParameter("idPadrao", idPadrao).getResultList();
     }
     
 }
