@@ -166,6 +166,7 @@ public class VerboController implements Serializable {
         if(!encontrou){
             try {
                 getFacade().create(current);
+                items = getPagination().createPageDataModel();
                 JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/resources/Bundle").getString("VerboCreated"));
                 return prepareCreate();
             } catch (Exception e) {
@@ -232,6 +233,14 @@ public class VerboController implements Serializable {
             recreateModel();
             return "List";
         }
+    }
+    
+    public String destroyAndList() {
+        performDestroy();
+        recreateModel();
+        updateCurrentItem();
+            recreateModel();
+            return "List";
     }
 
     private void performDestroy() {

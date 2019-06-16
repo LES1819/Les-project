@@ -28,6 +28,8 @@ import javax.faces.model.SelectItem;
 import jpa.entities.Agrupamento;
 import jpa.entities.AgrupamentohasFrase;
 import jpa.entities.AgrupamentohasFrasePK;
+import jpa.entities.Artefactos;
+import jpa.entities.Sujeito;
 import jpa.entities.Utilizador;
 import jpa.session.AgrupamentohasFraseFacade;
 import static org.apache.taglibs.standard.functions.Functions.containsIgnoreCase;
@@ -401,6 +403,7 @@ public class FraseController implements Serializable {
     public String create() {
         try {
             getFacade().create(current);
+            items = getPagination().createPageDataModel();
             JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/resources/Bundle").getString("FraseCreated"));
             return prepareCreate();
         } catch (Exception e) {
@@ -463,6 +466,14 @@ public class FraseController implements Serializable {
             recreateModel();
             return "List";
         }
+    }
+    
+    public String destroyAndList() {
+        performDestroy();
+        recreateModel();
+        updateCurrentItem();
+            recreateModel();
+            return "List";
     }
     
     private void performDestroyFull() {
