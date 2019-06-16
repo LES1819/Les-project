@@ -11,6 +11,17 @@
         </ui:define>
         <ui:define name="body">
             <h:form styleClass="jsfcrud_list_form" style="margin-top: 8%;">
+                
+                <h:inputText id="pesquisa" value="#{verboController.pesquisa}"></h:inputText>
+                <h:commandLink class="btn btn-secondary" action="#{verboController.pesquisar}">
+    				Pesquisar
+                    </h:commandLink>
+                
+                <h:commandLink class="btn btn-danger" action="#{verboController.limparFiltros}">
+    				Limpar Filtros
+                    </h:commandLink>
+               
+                
                 <h:panelGroup id="messagePanel" layout="block">
                     <h:messages errorStyle="color: red" infoStyle="color: green" layout="table"/>
                 </h:panelGroup>
@@ -34,19 +45,25 @@
                         </h:column>
                         <h:column>
                             <f:facet name="header">
-                                <h:outputText value="#{bundle.ListVerboTitle_verboPK_nome}"/>
+                                <h:commandLink action="#{verboController.ordenarNome()}">
+                                    <h:outputText value="#{bundle.ListVerboTitle_verboPK_nome}"/>
+                                </h:commandLink>
                             </f:facet>
                             <h:outputText value="#{item.verboPK.nome}"/>
                         </h:column>
                         <h:column>
                             <f:facet name="header">
-                                <h:outputText value="#{bundle.ListVerboTitle_tipo}"/>
+                                <h:commandLink action="#{verboController.ordenarTipo()}">
+                                    <h:outputText value="#{bundle.ListVerboTitle_tipo}"/>
+                                </h:commandLink>
                             </f:facet>
                             <h:outputText value="#{item.tipo}"/>
                         </h:column>
                         <h:column>
                             <f:facet name="header">
-                                <h:outputText value="#{bundle.ListVerboTitle_dataCriacao}"/>
+                                <h:commandLink action="#{verboController.ordenarData()}">
+                                    <h:outputText value="#{bundle.ListVerboTitle_dataCriacao}"/>
+                                </h:commandLink>
                             </f:facet>
                             <h:outputText value="#{item.dataCriacao}">
                                 <f:convertDateTime pattern="MM/dd/yyyy HH:mm:ss" />
