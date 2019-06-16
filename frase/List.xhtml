@@ -10,15 +10,13 @@
             <h:outputText value="#{bundle.ListFraseTitle}"></h:outputText>
         </ui:define>
         <ui:define name="body">
-            <h:form styleClass="jsfcrud_list_form">
-                <h:outputText value="Pesquisa"></h:outputText>
+            <h:form styleClass="jsfcrud_list_form" style="margin-top: 2%">
+               <!-- <h:outputText value="Pesquisa"></h:outputText> -->
                 <h:inputText id="pesquisa" value="#{fraseController.pesquisa}"></h:inputText>
-                    <h:commandLink action="#{fraseController.pesquisar}">
-    				PesquisaAqui
+                <h:commandLink class="btn btn-secondary" action="#{fraseController.pesquisar}">
+    				Pesquisar
                     </h:commandLink>
-                <h:commandLink action="#{fraseController.limparFiltros}">
-    				Limpar Filtros
-                    </h:commandLink>
+               
                 
                 
                
@@ -28,19 +26,22 @@
                   <div class="collapse navbar-collapse" id="navbarNav">
                      <ul class="navbar-nav">
                       <li class="nav-item active">
-                          <h:outputText value="Destinatário"></h:outputText>
+                          
                           <h:inputText id="destinatario" value="#{fraseController.destinatario}"></h:inputText>
+                          <h:outputText value=" Destinatário"></h:outputText>
                       </li>
                       <li class="nav-item">
-                          <h:outputText value="Sujeito"></h:outputText>
+                          
                           <h:inputText id="sujeito" value="#{fraseController.sujeito}"></h:inputText>
+                          <h:outputText value=" Sujeito"></h:outputText>
                       </li>
                       <li class="nav-item">
-                          <h:outputText value="Verbo"></h:outputText>
+                          
                           <h:inputText id="verbo" value="#{fraseController.verbo}"></h:inputText>
+                          <h:outputText value=" Verbo"></h:outputText>
                       </li>
                       <li class="nav-item">
-                          <h:outputText value="Data"></h:outputText>
+                          
                           <h:selectOneMenu value="#{fraseController.data}" >
                                 <f:selectItem itemValue="0" itemLabel="" />
                                 <f:selectItem itemValue="1" itemLabel="1 dia" />
@@ -48,14 +49,24 @@
                                 <f:selectItem itemValue="30" itemLabel="1 mes" />
                                 <f:selectItem itemValue="365" itemLabel="1 ano" />
                           </h:selectOneMenu>
+                          <h:outputText value=" Data"></h:outputText>
                       </li>
                     </ul>
-                      <h:selectBooleanCheckbox  id="andB" value="#{fraseController.andB}">Conter todos os filtros</h:selectBooleanCheckbox>
-                      <h:commandLink action="#{fraseController.pesquisaAvancada}">
+                      <h:selectBooleanCheckbox  id="andB" value="#{fraseController.andB}">Conter todos os filtros </h:selectBooleanCheckbox>
+                      <br />
+                      <h:commandLink class="btn btn-secondary" action="#{fraseController.pesquisaAvancada}">
     				Pesquisa Avancada
                     </h:commandLink>
                   </div>
                 <br />
+                <h:commandLink class="btn btn-danger" action="#{fraseController.limparFiltros}">
+    				Limpar Filtros
+                    </h:commandLink>
+                <br/>
+                <div style="margin-top: 1%;" >
+                    
+                
+                <br/>
                 <h:panelGroup id="messagePanel" layout="block">
                     <h:messages errorStyle="color: red" infoStyle="color: green" layout="table"/>
                 </h:panelGroup>
@@ -64,6 +75,11 @@
                     <h:outputText value="#{fraseController.pagination.pageFirstItem + 1}..#{fraseController.pagination.pageLastItem + 1}/#{fraseController.pagination.itemsCount}"/>&nbsp;
                     <h:commandLink action="#{fraseController.previous}" value="#{bundle.Previous} #{fraseController.pagination.pageSize}" rendered="#{fraseController.pagination.hasPreviousPage}"/>&nbsp;
                     <h:commandLink action="#{fraseController.next}" value="#{bundle.Next} #{fraseController.pagination.pageSize}" rendered="#{fraseController.pagination.hasNextPage}"/>&nbsp;
+                    <div style="float: right">
+                    <h:commandLink class="btn btn-primary" action="#{fraseController.prepareCreate}" value="#{bundle.ListFraseCreateLink}"/>
+                    <button type="button" class="check btn btn-danger" data-toggle="modal" data-target="#exampleModal" disabled="false"><span>Apagar</span></button>
+                </div>
+                    
                     <h:dataTable value="#{fraseController.items}" var="item" border="0" cellpadding="2" cellspacing="0" rowClasses="jsfcrud_odd_row,jsfcrud_even_row" rules="all" style="border:solid 1px">
                         <h:column>
                             <f:facet name ="header">
@@ -113,13 +129,12 @@
                             <h:outputText value=" "/>
                             <h:commandLink action="#{fraseController.prepareEdit}" value="#{bundle.ListFraseEditLink}"/>
                             <h:outputText value=" "/>
-                            <h:commandLink action="#{fraseController.destroy}" value="#{bundle.ListFraseDestroyLink}"/>
                         </h:column>
                     </h:dataTable>
                 </h:panelGroup>
+                </div>
                 <br />
-                <h:commandLink action="#{fraseController.prepareCreate}" value="#{bundle.ListFraseCreateLink}"/>
-                <button type="button" class="check btn btn-danger" data-toggle="modal" data-target="#exampleModal" disabled="false"><span>Apagar</span></button>
+                
                 <br />
                 <br />
                 <div class="modal fade"  id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">

@@ -13,7 +13,10 @@
             <h:panelGroup id="messagePanel" layout="block">
                 <h:messages errorStyle="color: red" infoStyle="color: green" layout="table"/>
             </h:panelGroup>
-            <h:form>
+            <h:form style="margin-top: 8%;">
+                <div style="float: right;">
+                    <h:commandLink class="btn btn-primary" action="#{fraseController.create}" value="#{bundle.CreateFraseSaveLink}" />
+                </div>
                 <h:panelGrid columns="2">
                     <h:outputLabel value="#{bundle.CreateFraseLabel_destinatario}" for="destinatario" />
                     <h:inputText id="destinatario" value="#{fraseController.selected.destinatario}" title="#{bundle.CreateFraseTitle_destinatario}" />
@@ -37,13 +40,9 @@
                     </h:selectOneMenu>
                 </h:panelGrid>
                 <br />
-                <h:commandLink action="#{fraseController.create}" value="#{bundle.CreateFraseSaveLink}" />
+                
                 <br />
-                <br />
-                <h:commandLink action="#{fraseController.prepareList}" value="#{bundle.CreateFraseShowAllLink}" immediate="true"/>
-                <br />
-                <br />
-                <h:link outcome="/index" value="#{bundle.CreateFraseIndexLink}"/>
+               
             </h:form>
         </ui:define>
     </ui:composition>
