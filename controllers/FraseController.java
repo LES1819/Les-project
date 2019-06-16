@@ -213,11 +213,11 @@ public class FraseController implements Serializable {
     private Boolean compareStrings(String a, String b, Boolean order){
         Boolean result = false;
         if(order){
-            if(a.compareTo(b) > 0){
+            if(a.toLowerCase().compareTo(b.toLowerCase()) > 0){
                 result = true;
             }
         }else{
-            if(a.compareTo(b) < 0){
+            if(a.toLowerCase().compareTo(b.toLowerCase()) < 0){
                 result = true;
             }
         }
