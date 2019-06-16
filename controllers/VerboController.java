@@ -9,6 +9,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -23,6 +24,7 @@ import javax.faces.model.DataModel;
 import javax.faces.model.ListDataModel;
 import javax.faces.model.SelectItem;
 import jpa.entities.Frase;
+import static org.apache.taglibs.standard.functions.Functions.containsIgnoreCase;
 
 @Named("verboController")
 @SessionScoped
@@ -159,15 +161,39 @@ public class VerboController implements Serializable {
     }
 
     public String create() {
-        try {
-            getFacade().create(current);
-            JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/resources/Bundle").getString("VerboCreated"));
+        
+        boolean encontrou = procurarIgual();
+        if(!encontrou){
+            try {
+                getFacade().create(current);
+                JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/resources/Bundle").getString("VerboCreated"));
+                return prepareCreate();
+            } catch (Exception e) {
+                JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/resources/Bundle").getString("PersistenceErrorOccured"));
+                return null;
+            }
+        }else{
+            JsfUtil.addErrorMessage(ResourceBundle.getBundle("/resources/Bundle").getString("VerboErrorName"));
             return prepareCreate();
-        } catch (Exception e) {
-            JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/resources/Bundle").getString("PersistenceErrorOccured"));
-            return null;
         }
     }
+    
+    private boolean procurarIgual(){
+        Iterator<Verbo> vl = getFacade().findAll().iterator();
+        while(vl.hasNext()){
+            if(containsIgnoreCase(vl.next().getVerboPK().getNome(), current.getVerboPK().getNome())){
+                return true;
+            }
+        }
+        /*
+        for(Verbo v: vl){
+            if(containsIgnoreCase(v.getVerboPK().getNome(), current.getVerboPK().getNome())){
+                return true;
+            }
+        }*/
+        return false;
+    }
+    
 
     public String prepareEdit() {
         current = (Verbo) getItems().getRowData();
@@ -215,6 +241,7 @@ public class VerboController implements Serializable {
         } catch (Exception e) {
             JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/resources/Bundle").getString("PersistenceErrorOccured"));
         }
+        items = getPagination().createPageDataModel();
     }
 
     private void updateCurrentItem() {

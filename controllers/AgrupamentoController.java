@@ -22,7 +22,12 @@ import javax.faces.convert.FacesConverter;
 import javax.faces.model.DataModel;
 import javax.faces.model.ListDataModel;
 import javax.faces.model.SelectItem;
+import jpa.entities.AgrupamentohasFrase;
+import jpa.entities.AgrupamentohasPadrao;
 import jpa.entities.Frase;
+import jpa.entities.Padrao;
+import jpa.session.AgrupamentohasFraseFacade;
+import jpa.session.AgrupamentohasPadraoFacade;
 
 @Named("agrupamentoController")
 @SessionScoped
@@ -32,10 +37,33 @@ public class AgrupamentoController implements Serializable {
     private DataModel items = null;
     @EJB
     private jpa.session.AgrupamentoFacade ejbFacade;
+    @EJB
+    private AgrupamentohasFraseFacade agrupamentohasFraseFacade;
+    
+    @EJB
+    private AgrupamentohasPadraoFacade agrupamentohasPadraoFacade;
     private PaginationHelper pagination;
     private int selectedItemIndex;
     private Map<Agrupamento, Boolean> selectedItems = new HashMap<Agrupamento, Boolean>();
     private List<Agrupamento> agrupamentosOnList;
+    private DataModel<Frase> frases = null;
+    private DataModel<Padrao> padroes = null;
+
+    public DataModel<Padrao> getPadroes() {
+        return padroes;
+    }
+
+    public void setPadroes(DataModel<Padrao> padroes) {
+        this.padroes = padroes;
+    }
+
+    public DataModel<Frase> getFrases() {
+        return frases;
+    }
+
+    public void setFrases(DataModel<Frase> frases) {
+        this.frases = frases;
+    }
 
     public AgrupamentoController() {
     }
@@ -58,6 +86,12 @@ public class AgrupamentoController implements Serializable {
 
     private AgrupamentoFacade getFacade() {
         return ejbFacade;
+    }
+    
+    public String destroyAgrup(){
+        
+        destroyAgrupamento(current);
+        return "List";
     }
 
     public void destroyAgrupamento(Agrupamento a) {
@@ -131,6 +165,66 @@ public class AgrupamentoController implements Serializable {
         
         current = (Agrupamento) getItems().getRowData();
         selectedItemIndex = pagination.getPageFirstItem() + getItems().getRowIndex();
+        prepareSelectedListFrases();
+        prepareSelectedListPadroes();
+        recreatePagination();
+        recreateModel();
+        return "View";
+    }
+    public void prepareSelectedListFrases(){
+        List<AgrupamentohasFrase> result = new ArrayList<>();
+        List<Frase> result2 = new ArrayList<>();
+        result.addAll(getFacade().pesquisaFrase(current.getIdAgrupamento()));
+        for(AgrupamentohasFrase af: result){
+            result2.add(af.getFrase());
+        }
+        
+        frases = new ListDataModel(result2);        
+    }
+    
+     public void prepareSelectedListPadroes(){
+        List<AgrupamentohasPadrao> result = new ArrayList<>();
+        List<Padrao> result2 = new ArrayList<>();
+        result.addAll(getFacade().pesquisaPadrao(current.getIdAgrupamento()));
+        for(AgrupamentohasPadrao af: result){
+            result2.add(af.getPadrao());
+        }
+        
+        padroes = new ListDataModel(result2);        
+    }
+     
+     
+    public String desassociarFrase(int idFrase){
+        List<AgrupamentohasFrase> ahf = getFacade().findByIdFraseIdAgrup(idFrase, current.getIdAgrupamento());
+        if(ahf.size() == 1){
+           AgrupamentohasFrase af =  ahf.get(0);
+            try {
+                 agrupamentohasFraseFacade.remove(af);
+                JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/resources/Bundle").getString("AgrupamentohasFraseDeleted"));
+            } catch (Exception e) {
+                JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/resources/Bundle").getString("PersistenceErrorOccured"));
+            }
+            prepareSelectedListFrases();
+        }
+        recreatePagination();
+        recreateModel();
+        
+        return "View";
+    }
+    
+    public String desassociarPadrao(int idPadrao){
+        List<AgrupamentohasPadrao> ahp = getFacade().findByIdPadraoIdAgrup(idPadrao, current.getIdAgrupamento());
+        if(ahp.size() == 1){
+           AgrupamentohasPadrao ap =  ahp.get(0);
+            try {
+                 agrupamentohasPadraoFacade.remove(ap);
+                JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/resources/Bundle").getString("AgrupamentohasPadraoDeleted"));
+            } catch (Exception e) {
+                JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/resources/Bundle").getString("PersistenceErrorOccured"));
+            }
+            prepareSelectedListFrases();
+        }
+        
         return "View";
     }
 
@@ -140,6 +234,8 @@ public class AgrupamentoController implements Serializable {
 	Date date = new Date();
         current.setDataCriacao(date);
         selectedItemIndex = -1;
+        recreatePagination();
+        recreateModel();
         return "Create";
     }
 
@@ -157,6 +253,8 @@ public class AgrupamentoController implements Serializable {
     public String prepareEdit() {
         current = (Agrupamento) getItems().getRowData();
         selectedItemIndex = pagination.getPageFirstItem() + getItems().getRowIndex();
+        recreatePagination();
+        recreateModel();
         return "Edit";
     }
 
@@ -164,6 +262,8 @@ public class AgrupamentoController implements Serializable {
         try {
             getFacade().edit(current);
             JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/resources/Bundle").getString("AgrupamentoUpdated"));
+            recreatePagination();
+            recreateModel();
             return "View";
         } catch (Exception e) {
             JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/resources/Bundle").getString("PersistenceErrorOccured"));
