@@ -13,6 +13,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.concurrent.TimeUnit;
 import javax.ejb.EJB;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
@@ -182,7 +183,7 @@ public class VerboController implements Serializable {
     private boolean procurarIgual(){
         Iterator<Verbo> vl = getFacade().findAll().iterator();
         while(vl.hasNext()){
-            if(containsIgnoreCase(vl.next().getVerboPK().getNome(), current.getVerboPK().getNome())){
+            if(vl.next().getVerboPK().getNome().toLowerCase().equals(current.getVerboPK().getNome().toLowerCase())){
                 return true;
             }
         }
@@ -199,6 +200,7 @@ public class VerboController implements Serializable {
     public String prepareEdit() {
         current = (Verbo) getItems().getRowData();
         selectedItemIndex = pagination.getPageFirstItem() + getItems().getRowIndex();
+        
         return "Edit";
     }
 
@@ -354,5 +356,239 @@ public class VerboController implements Serializable {
         }
 
     }
+    
+    //--------------------- ORDENAR TABELA -------------------------------
+    
+    public ArrayList<Verbo> DataModel_to_List(DataModel input){
+        Iterator<Verbo> temp = input.iterator();
+        ArrayList<Verbo> result = new ArrayList<>();
+        while(temp.hasNext()){
+            result.add(temp.next());
+        }
+        return result;
+    }
+    
+    public void InsertionSort(Boolean order, char coluna){
+        ArrayList<Verbo> arr = DataModel_to_List(items);
+        
+        int n = arr.size(); 
+        for (int i = 1; i < n; ++i) { 
+            Verbo key = arr.get(i);
+            int j = i - 1;
+            while (j >= 0 && comparator(arr.get(j), key, order, coluna)){
+                arr.set(j+1, arr.get(j));
+                j = j - 1; 
+            } 
+            arr.set(j+1, key);
+        }
+        
+        items = new ListDataModel(arr);
+    
+    }
+    
+    private Boolean comparator(Verbo a, Verbo b, boolean order, char coluna){
+        Boolean result = false;
+        switch(coluna){
+            case 'n':
+                result = compareStrings(a.getVerboPK().getNome(), b.getVerboPK().getNome(), order);//compare_suj(a, b, order);
+                break;
+            case 't':
+                result = compareStrings(a.getTipo(), b.getTipo(), order);
+                break;
+            case 'd':
+                result = compareDates(a.getDataCriacao(), b.getDataCriacao(), order); //tenho de ver isto
+                break;
+                    }
+        return result;
+    }
+    
+    private Boolean compareStrings(String a, String b, Boolean order){
+        Boolean result = false;
+        if(order){
+            if(a.toLowerCase().compareTo(b.toLowerCase()) > 0){
+                result = true;
+            }
+        }else{
+            if(a.toLowerCase().compareTo(b.toLowerCase()) < 0){
+                result = true;
+            }
+        }
+        return result;
+    }
+    
+    private Boolean compareDates(Date a, Date b, Boolean order){
+        Boolean result = false;
+        if(order){
+            if(a.compareTo(b) > 0){
+                result = true;
+            }
+        }else{
+            if(a.compareTo(b) < 0){
+                result = true;
+            }
+        }
+        return result;
+    }    
+    
+    Boolean order_nome=true, order_tipo=true, order_data=true;
+    
+    public void ordenarNome(){
+        InsertionSort(order_nome, 'n');
+        order_nome = !order_nome;
+    }
+    
+    public void ordenarTipo(){
+        InsertionSort(order_tipo, 't');
+        order_tipo = !order_tipo;
+    }
+    
+    public void ordenarData(){
+        InsertionSort(order_data, 'd');
+        order_data = !order_data;
+    }
+    
+    //-------------PESQUISA--------------------
+    /**
+     * pesquisa global
+     */
+    
+    String pesquisa = "";
+
+    public String getPesquisa() {
+        return pesquisa;
+    }
+
+    public void setPesquisa(String pesquisa) {
+        this.pesquisa = pesquisa;
+    }
+    
+    
+    
+    public void pesquisar(){
+        
+        Iterator<Verbo> temporario = getFacade().findAll().iterator();
+        List<Verbo> itens_pesquisa = new ArrayList<>();
+        while(temporario.hasNext()){
+            Verbo a = temporario.next();
+            if(containsIgnoreCase(a.getTipo(), pesquisa)){
+                itens_pesquisa.add(a);
+            }else if(containsIgnoreCase(a.getVerboPK().getNome(), pesquisa)){
+                System.out.println(a.getVerboPK().getNome() + "verbo nome");
+                itens_pesquisa.add(a);
+            }
+        }
+        
+        items = new ListDataModel(itens_pesquisa);
+        
+    }
+    
+    Boolean andB=false;
+    String nome="", tipo="";
+    int data=0;
+
+    public Boolean getAndB() {
+        return andB;
+    }
+
+    public void setAndB(Boolean andB) {
+        this.andB = andB;
+    }
+
+    public String getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
+    }
+
+    public int getData() {
+        return data;
+    }
+
+    public void setData(int data) {
+        this.data = data;
+    }
+    
+    public void pesquisaAvancada(){
+        if(andB){
+            pesquisaFiltradaAnd();
+        }else{
+            pesquisaFiltradaOr();
+        }
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+    
+    
+    
+    /**
+     * todos os itens que contenham pelo menos um dos filtros escolhidos
+     */
+    public void pesquisaFiltradaOr(){
+        Iterator<Verbo> temporario = getFacade().findAll().iterator();
+        List<Verbo> itens_filtrados = new ArrayList<>();
+        
+        
+        while(temporario.hasNext()){
+            Verbo a = temporario.next();
+            if(!nome.isEmpty() && containsIgnoreCase(a.getVerboPK().getNome(), nome)){
+                itens_filtrados.add(a);
+            }else if(tipo != null && containsIgnoreCase(a.getTipo(), tipo)){
+                itens_filtrados.add(a);
+            }else if(data != 0 && howManyDays(a.getDataCriacao()) <= data){
+                itens_filtrados.add(a);
+            }
+        }
+        
+        items = new ListDataModel(itens_filtrados);
+        
+    }
+    
+    /**
+     * ver ha quantos dias passou aquela data
+     * @param d data que quero  estudar
+     * @return numero de dias passados
+     */
+    private long howManyDays(Date d){
+        Date current_date = new Date();
+        long diffInMillies = Math.abs(d.getTime() - current_date.getTime());
+        long diff = TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
+        return diff;        
+    }
+    
+    /**
+     * retorna todos os itens que tem todos os filtros
+     */
+    public void pesquisaFiltradaAnd(){
+        Iterator<Verbo> temporario = getFacade().findAll().iterator();
+        List<Verbo> itens_filtrados = new ArrayList<>();
+        while(temporario.hasNext()){
+            Verbo a = temporario.next();
+            if((containsIgnoreCase(a.getVerboPK().getNome(), nome) || nome.isEmpty()) && (containsIgnoreCase(a.getTipo(), tipo) ||  tipo.isEmpty()) && (data == 0 || howManyDays(a.getDataCriacao()) <= data)){
+                itens_filtrados.add(a);
+            }
+        }
+        
+        items = new ListDataModel(itens_filtrados);
+        
+    }
+    
+    public void limparFiltros(){
+        pesquisa = "";
+        nome="";
+        tipo ="";
+        data=0;
+        items = null;
+        items = getItems(); 
+    }
+    
+    //-------------------------------------------
 
 }
