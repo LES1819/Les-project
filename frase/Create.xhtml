@@ -27,7 +27,7 @@
                         <f:selectItems value="#{artefactosController.itemsAvailableSelectOne}"/>
                     </h:selectOneMenu>
                     <h:outputLabel value="#{bundle.CreateFraseLabel_sujeitoidSujeito}" for="sujeitoidSujeito" />
-                    <h:selectOneMenu id="sujeitoidSujeito" value="#{fraseController.selected.sujeitoidSujeito}" title="#{bundle.CreateFraseTitle_sujeitoidSujeito}" required="false" requiredMessage="#{bundle.CreateFraseRequiredMessage_sujeitoidSujeito}">
+                    <h:selectOneMenu id="sujeitoidSujeito" value="#{fraseController.selected.sujeitoidSujeito}" title="#{bundle.CreateFraseTitle_sujeitoidSujeito}" required="true" requiredMessage="#{bundle.CreateFraseRequiredMessage_sujeitoidSujeito}">
                         <f:selectItems value="#{sujeitoController.itemsAvailableSelectOne}" />
                     </h:selectOneMenu>
                     <h:outputLabel value="#{bundle.CreateFraseLabel_utilizadoridUtilizador}" for="utilizadoridUtilizador" />
