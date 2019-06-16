@@ -13,7 +13,16 @@
             <h:panelGroup id="messagePanel" layout="block">
                 <h:messages errorStyle="color: red" infoStyle="color: green" layout="table"/>
             </h:panelGroup>
-            <h:form>
+            
+            <h:form style="margin-top: 8%;">
+                
+            <div style="float: right;">
+                <h:commandLink  style="margin-right: 5px;" class="btn btn-primary" action="#{verboController.prepareCreate}" value="#{bundle.ViewVerboCreateLink}" />
+                <h:link outcome="Edit" class="btn btn-primary" value="#{bundle.ViewVerboEditLink}"/>
+                 <button type="button" class="check btn btn-danger" data-toggle="modal" data-target="#exampleModal"><span>Apagar</span></button>
+                
+                </div>
+            <br />
                 <h:panelGrid columns="2">
                     <h:outputText value="#{bundle.ViewVerboLabel_verboPK_nome}"/>
                     <h:outputText value="#{verboController.selected.verboPK.nome}" title="#{bundle.ViewVerboTitle_verboPK_nome}"/>
@@ -24,11 +33,12 @@
                         <f:convertDateTime pattern="MM/dd/yyyy HH:mm:ss" />
                     </h:outputText>
                 </h:panelGrid>
-                
+                 <br />
+                  <br />
+                   <br />
                 <f:view>
 
 
-                    <h:form>
                         <h3><h:outputText value="Frases Associadas"/></h3>
                         <h:dataTable value="#{verboController.frases}" var="item_frase" border="0" cellpadding="2" cellspacing="0" rowClasses="jsfcrud_odd_row,jsfcrud_even_row" rules="all" style="border:solid 1px">
                                     <h:column>
@@ -50,13 +60,13 @@
                                         <h:outputText value="#{item_frase.destinatario}"/>
                                     </h:column>
                                 </h:dataTable>
-                    </h:form>
+                 
                 </f:view>
 
                 
                 <br />
                 
-                <button type="button" class="check btn btn-danger" data-toggle="modal" data-target="#exampleModal"><span>Apagar</span></button>
+                
 
                 
                 <div class="modal fade"  id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -73,22 +83,14 @@
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                                <h:commandButton class="btn btn-primary" action="#{verboController.destroyAndView}" value="Apagar"></h:commandButton>
+                                <h:commandButton class="btn btn-primary" action="#{verboController.destroyVerbos()}" value="Apagar"></h:commandButton>
                             </div>
                         </div>
                     </div>
                 </div>
                 
                 <br />
-                <br />
-                <h:link outcome="Edit" value="#{bundle.ViewVerboEditLink}"/>
-                <br />
-                <h:commandLink action="#{verboController.prepareCreate}" value="#{bundle.ViewVerboCreateLink}" />
-                <br />
-                <h:commandLink action="#{verboController.prepareList}" value="#{bundle.ViewVerboShowAllLink}"/>
-                <br />
-                <br />
-                <h:link outcome="/index" value="#{bundle.ViewVerboIndexLink}"/>
+                
 
             </h:form>
         </ui:define>

@@ -13,7 +13,12 @@
             <h:panelGroup id="messagePanel" layout="block">
                 <h:messages errorStyle="color: red" infoStyle="color: green" layout="table"/>
             </h:panelGroup>
-            <h:form>
+            <h:form style="margin-top: 8%;">
+                <div style="float: right">
+                    <h:commandLink class="btn btn-primary" action="#{verboController.update}" value="#{bundle.EditVerboSaveLink}"/>
+                     <h:link class="btn btn-primary" outcome="View" value="#{bundle.EditVerboViewLink}"/>
+                </div>
+                <br/>
                 <h:panelGrid columns="2">
                     <h:outputLabel value="#{bundle.EditVerboLabel_verboPK_nome}" for="verboPK_nome" />
                     <h:inputText id="verboPK_nome" value="#{verboController.selected.verboPK.nome}" title="#{bundle.EditVerboTitle_verboPK_nome}" required="true" requiredMessage="#{bundle.EditVerboRequiredMessage_verboPK_nome}"/>
@@ -23,15 +28,8 @@
                         <f:selectItem itemValue="comunicativo" itemLabel="comunicativo" />
                     </h:selectOneMenu>
                 </h:panelGrid>
-                <h:commandLink action="#{verboController.update}" value="#{bundle.EditVerboSaveLink}"/>
+               
                 <br />
-                <br />
-                <h:link outcome="View" value="#{bundle.EditVerboViewLink}"/>
-                <br />
-                <h:commandLink action="#{verboController.prepareList}" value="#{bundle.EditVerboShowAllLink}" immediate="true"/>
-                <br />
-                <br />
-                <h:link outcome="/index" value="#{bundle.EditVerboIndexLink}" />
             </h:form>
         </ui:define>
     </ui:composition>

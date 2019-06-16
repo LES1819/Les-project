@@ -13,7 +13,11 @@
             <h:panelGroup id="messagePanel" layout="block">
                 <h:messages errorStyle="color: red" infoStyle="color: green" layout="table"/>
             </h:panelGroup>
-            <h:form>
+            <h:form style="margin-top: 8%;">
+                <div style="float: right;">
+                    <h:commandLink class="btn btn-primary" action="#{verboController.create}" value="#{bundle.CreateVerboSaveLink}" />
+                </div>
+                <br />
                 <h:panelGrid columns="2">
                     <h:outputLabel value="#{bundle.CreateVerboLabel_verboPK_nome}" for="verboPK_nome" />
                     <h:inputText id="verboPK_nome" value="#{verboController.selected.verboPK.nome}" title="#{bundle.CreateVerboTitle_verboPK_nome}" required="true" requiredMessage="#{bundle.CreateVerboRequiredMessage_verboPK_nome}"/>
@@ -25,13 +29,8 @@
                    
                 </h:panelGrid>
                 <br />
-                <h:commandLink action="#{verboController.create}" value="#{bundle.CreateVerboSaveLink}" />
-                <br />
-                <br />
-                <h:commandLink action="#{verboController.prepareList}" value="#{bundle.CreateVerboShowAllLink}" immediate="true"/>
-                <br />
-                <br />
-                <h:link outcome="/index" value="#{bundle.CreateVerboIndexLink}"/>
+                
+                
             </h:form>
         </ui:define>
     </ui:composition>
