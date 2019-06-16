@@ -7,19 +7,17 @@
 
     <ui:composition template="/template.xhtml">
         <ui:define name="title">
-            <h:outputText value="#{bundle.ListPadraoTitle}"></h:outputText>
+            <h:outputText value="#{bundle.ListPapelTitle}"></h:outputText>
         </ui:define>
         <ui:define name="content">
+            <h:panelGroup id="messagePanel" layout="block">
+                <h:messages errorStyle="color: red" infoStyle="color: green" layout="table"/>
+            </h:panelGroup>
             <h:form styleClass="jsfcrud_list_form">
-
-                <h:panelGroup id="messagePanel" layout="block">
-                    <h:messages errorStyle="color: red" infoStyle="color: green" layout="table"/>
-                </h:panelGroup>
                 <br/>
                 <div class="row">
-                <h:link outcome="/atividade/List" value="Lista de Atividades"/> <i class="fa fa-arrow-right seta"></i> <h:link outcome="/atividade/View" value="Ver Atividade: #{atividadeController.selected.nome}"/><i class="fa fa-arrow-right seta"></i> Associar Padrões à Atividade: #{atividadeController.selected.nome}
+                <h:link outcome="/atividade/List" value="Lista de Atividades"/><i class="fa fa-arrow-right seta"></i> <h:link outcome="/atividade/View" value="Ver Atividade: #{atividadeController.selected.nome}"/><i class="fa fa-arrow-right seta"></i> Associar Papéis à Atividade: #{atividadeController.selected.nome}
             </div>
-                
                 <div class="btn-group right">
 
 
@@ -37,7 +35,7 @@
 
                             </div>
                         </div>
-                        <h:commandButton type="submit" class="btn btn-primary" value="#{bundle.AssociateAll}" action="#{padraoController.associateAllPatterns(0)}" disabled="false"/>                                   
+                        <h:commandButton type="submit" class="btn btn-primary" value="#{bundle.AssociateAll}" action="#{papelController.associateAllPapers(1)}" disabled="false"/>                                   
                     </div>                               
                 </div>
                 <br/>
@@ -55,16 +53,16 @@
                                 </th>
                                 <th data-index="1">Nome</th>
                                 <th data-index="2">Descrição</th>
-                                <th data-index="3">Criado por</th>
+                                <th data-index="3">Utilizador</th>
                                 <th data-index="4">Data de criação</th>
                                 <th class="no-sort" data-index="5">Detalhes</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <ui:repeat value="#{padraoController.itemsNotAssociated}" var="item">
+                            <ui:repeat value="#{papelController.itemsNotAssociated}" var="item">
                                 <tr>
                                     <td style="text-align: center;">
-                                        <h:selectBooleanCheckbox class="check[]" onchange="enableAssociate();" value="#{padraoController.selectedItems[item]}"/>
+                                        <h:selectBooleanCheckbox class="check[]" onclick="enableAssociate()" value="#{papelController.selectedItems[item]}"/>
                                     </td>
                                     <td>
                                         #{item.nome}
@@ -79,18 +77,17 @@
                                         #{produtoController.dateToString(item.dataCriacao)}
                                     </td>
                                     <td>
-                                         <h:link outcome="/padrao/View" value="#{bundle.View}"/>
+                                        <h:link outcome="/papel/View" value="#{bundle.View}"/>
                                     </td>
                                 </tr>
                             </ui:repeat>
                         </tbody>
                     </table>
                 </div>
-                
                 <h:button class="check btn btn-primary" outcome="/atividade/View" value="Voltar"/>
             </h:form>
-            <h:outputScript library="javascript" name="checkboxes.js"/>
-            <h:outputScript library="javascript" name="filterAssociatePatterns.js"/>
+            <h:outputScript library="javascript" name="checkboxes.js"/> 
+            <h:outputScript library="javascript" name="filterAssociatePapers.js"/> 
         </ui:define>
     </ui:composition>
 

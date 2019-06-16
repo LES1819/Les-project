@@ -10,53 +10,61 @@
             <h:outputText value="#{bundle.ViewAtividadeTitle}"></h:outputText>
         </ui:define>
         <ui:define name="content">
-            <br/>
             
+            <br/>
             <div class="col-md-12">
-                <h:link outcome="/atividade/List" value="Lista de Atividades"></h:link> <i class="fa fa-arrow-right seta"></i> Ver Atividade: #{atividadeController.selected.nome}
+                <div class="row">
+                    <h:link outcome="/processo/List" value="Lista de Processos"/> / <h:link outcome="/processo/View" value="Ver Processo: #{processoController.selected.nome}"/> / Ver Atividade: #{atividadeController.selected.nome}
+                </div>
                 <div class="btn-group right">
                     <h:form>
-                        <h:commandButton class="btn btn-primary" action="Edit" value="Editar"/>
+                        <h:commandButton class="btn btn-primary" action="EditCopy" value="Editar"/>
                     </h:form>
                     <button class="btn btn-danger" data-toggle="modal" data-target="#exampleModal"><span>Apagar</span></button>
                 </div>
                 <br/>
                 <br/>
-                <h:panelGroup id="messagePanel" layout="block">
-                    <h:messages errorStyle="color: red" infoStyle="color: green" layout="table"/>
-                </h:panelGroup>
+                
+                
+                
 
-
-
-                <h:dataTable class="table" border="0" cellpadding="2" cellspacing="0" style="margin-top:1%; width: 78%; box-shadow: 0 2px 4px 0 rgba(0,0,0,0.16),0 2px 10px 0 rgba(0,0,0,0.12)!important;">                                                
-                    <f:facet name="header">
-                        <h:outputText value="Nome: "/>
-                        <h:outputText style="padding-left: 5%" value="#{atividadeController.selected.nome}"/>
-                    </f:facet>
-                </h:dataTable>
-
-                <h:dataTable class="table" border="0" cellpadding="2" cellspacing="0" style="margin-top:1%; width: 78%; box-shadow: 0 2px 4px 0 rgba(0,0,0,0.16),0 2px 10px 0 rgba(0,0,0,0.12)!important;">                                                
-                    <f:facet name="header">
-                        <h:outputText value="Descrição: "/>
-                        <h:outputText style="padding-left: 5%" value="#{atividadeController.selected.descricao}"/>
-                    </f:facet>
-                </h:dataTable>
-
-                <h:dataTable class="table" border="0" cellpadding="2" cellspacing="0" style="margin-top:1%; width: 78%; box-shadow: 0 2px 4px 0 rgba(0,0,0,0.16),0 2px 10px 0 rgba(0,0,0,0.12)!important;">                                                
-                    <f:facet name="header">
-                        <h:outputText value="Criado por: "/>
-                        <h:outputText style="padding-left: 5%" value="#{atividadeController.selected.utilizadoridUtilizador.nome}"/>
-                    </f:facet>
-                </h:dataTable>
-
-                <h:form>
+                    <h:dataTable class="table" border="0" cellpadding="2" cellspacing="0" style="margin-top:1%; width: 78%; box-shadow: 0 2px 4px 0 rgba(0,0,0,0.16),0 2px 10px 0 rgba(0,0,0,0.12)!important;">                                                
+                        <f:facet name="header">
+                            <h:outputText value="Nome: "/>
+                            <h:outputText style="padding-left: 5%" value="#{atividadeController.selected.nome}"/>
+                        </f:facet>
+                    </h:dataTable>
+           
+                    <h:dataTable class="table" border="0" cellpadding="2" cellspacing="0" style="margin-top:1%; width: 78%; box-shadow: 0 2px 4px 0 rgba(0,0,0,0.16),0 2px 10px 0 rgba(0,0,0,0.12)!important;">                                                
+                        <f:facet name="header">
+                            <h:outputText value="Descrição: "/>
+                            <h:outputText style="padding-left: 5%" value="#{atividadeController.selected.descricao}"/>
+                        </f:facet>
+                    </h:dataTable>
+           
+                 <h:dataTable class="table" border="0" cellpadding="2" cellspacing="0" style="margin-top:1%; width: 78%; box-shadow: 0 2px 4px 0 rgba(0,0,0,0.16),0 2px 10px 0 rgba(0,0,0,0.12)!important;">                                                
+                        <f:facet name="header">
+                            <h:outputText value="Criado por: "/>
+                            <h:outputText style="padding-left: 5%" value="#{atividadeController.selected.utilizadoridUtilizador.nome}"/>
+                        </f:facet>
+                    </h:dataTable>
+           
+                    <h:dataTable class="table" border="0" cellpadding="2" cellspacing="0" style="margin-top:1%; width: 78%; box-shadow: 0 2px 4px 0 rgba(0,0,0,0.16),0 2px 10px 0 rgba(0,0,0,0.12)!important;">                                                
+                        <f:facet name="header">
+                            <h:outputText value="Processo: "/>
+                            <h:outputText style="padding-left: 5%" value="#{atividadeController.selected.processoidProcesso.nome}"/>
+                        </f:facet>
+                    </h:dataTable>
+                    
+           
+                     <h:form>
                     <h:dataTable class="table" border="0" cellpadding="2" cellspacing="0" style="margin-top:1%; width: 78%; box-shadow: 0 2px 4px 0 rgba(0,0,0,0.16),0 2px 10px 0 rgba(0,0,0,0.12)!important;">                                                
                         <f:facet name="header">
                             <h:outputText value="Papéis: "/>
                             <ui:repeat value="#{papelhasAtividadeController.getAssociatedPapers(atividadeController.selected)}" var="item2" varStatus="status">
                                 <h:outputText value="#{papelController.getPapel(item2.papelhasAtividadePK.papelidPapel).nome} " rendered="#{status.first}" />
                                 <h:outputText value=", #{papelController.getPapel(item2.papelhasAtividadePK.papelidPapel).nome}"  rendered="#{!status.first}"/>  
-                                <h:commandLink action="#{papelhasAtividadeController.destroyAsso(item2,0)}">
+                                <h:commandLink action="#{papelhasAtividadeController.destroyAsso(item2,1)}">
                                     <i class="fa fa-times" style="color:red;"></i>
                                 </h:commandLink>
                             </ui:repeat>
@@ -71,7 +79,7 @@
                             <ui:repeat value="#{produtohasAtividadeController.getAssociatedProducts(atividadeController.selected)}" var="item3" varStatus="status">
                                 <h:outputText value="#{produtoController.getProduto(item3.produtohasAtividadePK.produtoidProduto).nome}" rendered="#{status.first}" />
                                 <h:outputText value=", #{produtoController.getProduto(item3.produtohasAtividadePK.produtoidProduto).nome}"  rendered="#{!status.first}"/>  
-                                <h:commandLink action="#{produtohasAtividadeController.destroyAsso(item3,0)}">
+                                <h:commandLink action="#{produtohasAtividadeController.destroyAsso(item3,1)}">
                                     <i class="fa fa-times" style="color:red;"></i>
                                 </h:commandLink>
                             </ui:repeat>
@@ -87,7 +95,7 @@
                             <ui:repeat value="#{atividadehasPadraoController.getAssociatedPatterns(atividadeController.selected)}" var="item4" varStatus="status">
                                 <h:outputText value="#{padraoController.getPadrao(item4.atividadehasPadraoPK.padraoidPadrao).nome} " rendered="#{status.first}" />
                                 <h:outputText value=", #{padraoController.getPadrao(item4.atividadehasPadraoPK.padraoidPadrao).nome}"  rendered="#{!status.first}"/> 
-                                <h:commandLink action="#{atividadehasPadraoController.destroyAsso(item4,0)}">
+                                <h:commandLink action="#{atividadehasPadraoController.destroyAsso(item4,1)}">
                                     <i class="fa fa-times" style="color:red;"></i>
                                 </h:commandLink>
                             </ui:repeat>
@@ -102,16 +110,17 @@
                     </f:facet>
                 </h:dataTable>
                 
-                        <div class="btn-group right">
+                <div class="btn-group right">
    
-                            <h:button outcome="#{papelController.prepareAssociate(atividadeController.selected,0)}" class="btn btn-success" value="Associar Papéis"/>
-                        <h:button outcome="#{produtoController.prepareAssociate(atividadeController.selected,0)}" class="btn btn-success" value="Associar Produtos"/>
-                        <h:button outcome="#{padraoController.prepareAssociate(atividadeController.selected,0)}" class="btn btn-success" value="Associar Padrões"/>
+                            <h:button outcome="#{papelController.prepareAssociate(atividadeController.selected,1)}" class="btn btn-success" value="Associar Papéis"/>
+                        <h:button outcome="#{produtoController.prepareAssociate(atividadeController.selected,1)}" class="btn btn-success" value="Associar Produtos"/>
+                        <h:button outcome="#{padraoController.prepareAssociate(atividadeController.selected,1)}" class="btn btn-success" value="Associar Padrões"/>
                         </div>
-                <h:button class="check btn btn-primary" outcome="#{atividadeController.prepareList()}" value="Voltar"/>
+     
+                <h:button class="check btn btn-primary" outcome="/processo/View" value="Voltar"/>
                 
 
-
+                
 
             </div>
             <br/>
@@ -131,16 +140,16 @@
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
                             <h:form>
-                                <h:commandButton class="btn btn-primary" action="#{atividadeController.destroyAndList(0)}" value="Apagar"/>
+                                <h:commandButton class="btn btn-primary" action="#{atividadeController.destroyAndList(1)}" value="Apagar"/>
                             </h:form>
                         </div>
-
-
-
+                        
+                        
+                        
                     </div>
                 </div>
             </div>
-
+           
 
         </ui:define>
     </ui:composition>

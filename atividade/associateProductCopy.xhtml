@@ -37,13 +37,12 @@
 
                             </div>
                         </div>
-                        <h:commandButton type="submit" class="btn btn-primary" value="#{bundle.AssociateAll}" action="#{produtoController.associateAllProducts(0)}" disabled="false"/>                                   
+                        <h:commandButton type="submit" class="btn btn-primary" value="#{bundle.AssociateAll}" action="#{produtoController.associateAllProducts(1)}" disabled="false"/>                                   
                     </div>                               
                 </div>
                 <br/>
                 
-                
-            <div>
+                <div>
             <table id="example" class="display">
                
                 <thead>
@@ -57,7 +56,7 @@
                         <th data-index="1">Nome</th>
                         <th data-index="2">Descrição</th>
                         <th data-index="3">Tipo</th>
-                        <th data-index="4">Utilizador</th>
+                        <th data-index="4">Criado por</th>
                         <th data-index="5">Data de criação</th>
                         <th class="no-sort" data-index="6">Detalhes</th>
                     </tr>

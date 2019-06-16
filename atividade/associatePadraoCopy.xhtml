@@ -15,11 +15,10 @@
                 <h:panelGroup id="messagePanel" layout="block">
                     <h:messages errorStyle="color: red" infoStyle="color: green" layout="table"/>
                 </h:panelGroup>
-                <br/>
-                <div class="row">
-                <h:link outcome="/atividade/List" value="Lista de Atividades"/> <i class="fa fa-arrow-right seta"></i> <h:link outcome="/atividade/View" value="Ver Atividade: #{atividadeController.selected.nome}"/><i class="fa fa-arrow-right seta"></i> Associar Padrões à Atividade: #{atividadeController.selected.nome}
+                   <br/>
+                   <div class="row">
+                <h:link outcome="/atividade/List" value="Lista de Atividades"/><i class="fa fa-arrow-right seta"></i> <h:link outcome="/atividade/View" value="Ver Atividade: #{atividadeController.selected.nome}"/> <i class="fa fa-arrow-right seta"></i> Associar Padrões à Atividade: #{atividadeController.selected.nome}
             </div>
-                
                 <div class="btn-group right">
 
 
@@ -37,11 +36,10 @@
 
                             </div>
                         </div>
-                        <h:commandButton type="submit" class="btn btn-primary" value="#{bundle.AssociateAll}" action="#{padraoController.associateAllPatterns(0)}" disabled="false"/>                                   
+                        <h:commandButton type="submit" class="btn btn-primary" value="#{bundle.AssociateAll}" action="#{padraoController.associateAllPatterns(1)}" disabled="false"/>                                   
                     </div>                               
                 </div>
                 <br/>
-                
                 <div>
                     <table id="example" class="display">
 
@@ -86,7 +84,6 @@
                         </tbody>
                     </table>
                 </div>
-                
                 <h:button class="check btn btn-primary" outcome="/atividade/View" value="Voltar"/>
             </h:form>
             <h:outputScript library="javascript" name="checkboxes.js"/>

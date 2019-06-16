@@ -11,8 +11,9 @@
             <h:outputText value="#{bundle.EditAtividadeTitle}"></h:outputText>
         </ui:define>
         <ui:define name="content">
+            <br/>
             <div class="row">
-                <h:link outcome="/atividade/List" value="Lista de Atividades"/> <i class="fa fa-arrow-right seta"></i> Editar Atividade: #{atividadeController.selected.nome}
+                <h:link outcome="/processo/List" value="Lista de Processos "/> <i class="fa fa-arrow-right seta"></i> <h:link outcome="/processo/View" value="Ver Processo: #{processoController.selected.nome}"/> <i class="fa fa-arrow-right seta"></i> <h:link outcome="/atividade/ViewCopy" value="Ver Atividade: #{atividadeController.selected.nome}"/> <i class="fa fa-arrow-right seta"></i> Editar Atividade: #{atividadeController.selected.nome} 
             </div>
             <div class="row tabela">
                 <h:form class="width">
@@ -35,8 +36,8 @@
 
 
                     <div class="btn-group right">
-                        <h:commandButton type="submit" class="btn btn-primary" value="Confirmar" action="#{atividadeController.update(0)}"/>
-                        <h:button class="check btn btn-danger" outcome="/atividade/List" value="Cancelar"/>
+                        <h:commandButton type="submit" class="btn btn-primary" value="Confirmar" action="#{atividadeController.update(1)}"/>
+                        <h:button class="check btn btn-danger" outcome="/atividade/ViewCopy" value="Cancelar"/>
                     </div>
 
                 </h:form>

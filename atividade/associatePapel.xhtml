@@ -10,59 +10,87 @@
             <h:outputText value="#{bundle.ListPapelTitle}"></h:outputText>
         </ui:define>
         <ui:define name="content">
+            <h:panelGroup id="messagePanel" layout="block">
+                <h:messages errorStyle="color: red" infoStyle="color: green" layout="table"/>
+            </h:panelGroup>
             <h:form styleClass="jsfcrud_list_form">
-                <h:panelGroup id="messagePanel" layout="block">
-                    <h:messages errorStyle="color: red" infoStyle="color: green" layout="table"/>
-                </h:panelGroup>
-                <h:outputText escape="false" value="#{bundle.ListPapelEmpty}" rendered="#{papelController.itemsNotAssociated.rowCount == 0}"/>
-                <h:panelGroup rendered="#{papelController.itemsNotAssociated.rowCount > 0}">
-                    <h:outputText value="#{papelController.pagination.pageFirstItem + 1}..#{papelController.pagination.pageLastItem + 1}/#{papelController.pagination.itemsCount}"/>&nbsp;
-                    <h:commandLink action="#{papelController.previousNotAssociated()}" value="#{bundle.Previous} #{papelController.pagination.pageSize}" rendered="#{papelController.pagination.hasPreviousPage}"/>&nbsp;
-                    <h:commandLink action="#{papelController.nextNotAssociated()}" value="#{bundle.Next} #{papelController.pagination.pageSize}" rendered="#{papelController.pagination.hasNextPage}"/>&nbsp;
-                    <h:dataTable value="#{papelController.itemsNotAssociated}" var="item" border="0" cellpadding="2" cellspacing="0" rowClasses="jsfcrud_odd_row,jsfcrud_even_row" rules="all" style="border:solid 1px">
-                        <h:column>
-                            <f:facet name="header">
-                                <h:selectBooleanCheckbox onclick="toggleAll(); enableAssociate();"></h:selectBooleanCheckbox>
-                            </f:facet>
-                            <h:selectBooleanCheckbox class="check[]" onchange="enableAssociate();" value="#{papelController.selectedItems[item]}" />
-                        </h:column>
-                        <h:column>
-                        <f:facet name="header">
-                            <h:outputText value="#{bundle.ListPapelTitle_nome}"/>
-                        </f:facet>
-                        <h:outputText value="#{item.nome}"/>
-                        </h:column>
-                        <h:column>
-                            <f:facet name="header">
-                                <h:outputText value="#{bundle.ListPapelTitle_descricao}"/>
-                            </f:facet>
-                            <h:outputText value="#{item.descricao}"/>
-                        </h:column>
-                        <h:column>
-                            <f:facet name="header">
-                                <h:outputText value="#{bundle.ListProdutoTitle_utilizadoridUtilizador}"/>
-                            </f:facet>
-                            <h:outputText value="#{item.utilizadoridUtilizador.nome}"/>
-                        </h:column>
-                        <h:column>
-                            <f:facet name="header">
-                                <h:outputText value="#{bundle.Details}"/>
-                            </f:facet>
-                            <h:link outcome="/papel/View" value="#{bundle.View}"/>
-                        </h:column>
-                    </h:dataTable>
-                </h:panelGroup>
-                <br />
-                <h:commandLink action="#{papelController.prepareListOfPapers}" value="#{bundle.ListOfAllPapers}"/>
-                <br />
-                <br />
+                <br/>
+                <div class="row">
+                <h:link outcome="/atividade/List" value="Lista de Atividades"/><i class="fa fa-arrow-right seta"></i> <h:link outcome="/atividade/View" value="Ver Atividade: #{atividadeController.selected.nome}"/><i class="fa fa-arrow-right seta"></i>Associar Papéis à Atividade: #{atividadeController.selected.nome}
+            </div>
+                <div class="btn-group right">
+
+
+                    <div class="btn-group mr-2 distancia_top_left">
+                        <div class="btn-group dropleft" role="group">
+                            <button type="button" id="select" class="check btn btn-secondary " data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fas fa-ellipsis-v"></i>
+                            </button>
+                            <div class="dropdown-menu">
+                                <!-- Dropdown menu links -->
+
+                                <div class="col">
+                                    <button name="tipo" type="submit" class="dropdown-item" >drop</button>
+                                </div>
+
+                            </div>
+                        </div>
+                        <h:commandButton type="submit" class="btn btn-primary" value="#{bundle.AssociateAll}" action="#{papelController.associateAllPapers(0)}" disabled="false"/>                                   
+                    </div>                               
+                </div>
+                <br/>
                 
-                <h:commandButton action="#{papelController.associateAllPapers()}" disabled="false" type="submit" class="btn btn-primary" value="#{bundle.AssociateAll}"></h:commandButton>
-                <br />
-                <br />
-                <h:link outcome="/index" value="#{bundle.ListPapelIndexLink}"/>
+               
+                
+                <div>
+                    <table id="example" class="display">
+
+                        <thead>
+
+                            <tr>
+
+                                <th class="no-sort" data-index="0">
+
+                                    <h:selectBooleanCheckbox onclick="toggleAll(); enableAssociate();"/>
+                                </th>
+                                <th data-index="1">Nome</th>
+                                <th data-index="2">Descrição</th>
+                                <th data-index="3">Utilizador</th>
+                                <th data-index="4">Data de criação</th>
+                                <th class="no-sort" data-index="5">Detalhes</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <ui:repeat value="#{papelController.itemsNotAssociated}" var="item">
+                                <tr>
+                                    <td style="text-align: center;">
+                                        <h:selectBooleanCheckbox class="check[]" onclick="enableAssociate()" value="#{papelController.selectedItems[item]}"/>
+                                    </td>
+                                    <td>
+                                        #{item.nome}
+                                    </td>
+                                    <td>
+                                        #{item.descricao}
+                                    </td>
+                                    <td>
+                                        #{item.utilizadoridUtilizador.nome}
+                                    </td>
+                                    <td>
+                                        #{produtoController.dateToString(item.dataCriacao)}
+                                    </td>
+                                    <td>
+                                        <h:link outcome="/papel/View" value="#{bundle.View}"/>
+                                    </td>
+                                </tr>
+                            </ui:repeat>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <h:button class="check btn btn-primary" outcome="/atividade/View" value="Voltar"/>
             </h:form>
-             <h:outputScript library="javascript" name="checkboxes.js"></h:outputScript>
+            <h:outputScript library="javascript" name="checkboxes.js"/>
+            <h:outputScript library="javascript" name="filterAssociatePapers.js"/>
         </ui:define>
     </ui:composition>
 
