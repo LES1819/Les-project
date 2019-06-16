@@ -157,3 +157,83 @@ function toggleproduto() {
 }
 
 
+function togglefrase(){
+        var checkboxes = document.getElementsByClassName('check[]');
+        var checked = 0;
+        for(var i = 0; i < checkboxes.length; i++){
+            if(checkboxes[i].checked === true){
+                checked++;
+            }
+            if(checked > 1){
+               break;
+            }
+        }
+	if(checked === 1){
+            document.getElementsByClassName("check btn btn-danger")[0].disabled = false;
+            document.getElementById("exampleModalLabel").innerHTML = "Apagar a Frase?";
+            document.getElementById("modalid").innerHTML = "Irá apagar a associção aos agrupamentos.";
+	}
+        else if(checked > 1){
+            document.getElementsByClassName("check btn btn-danger")[0].disabled = false;
+            document.getElementById("exampleModalLabel").innerHTML = "Apagar as frases?";
+            document.getElementById("modalid").innerHTML = "Irá apagar as associções aos agrupamentos.";
+        }
+	else{
+           document.getElementsByClassName("check btn btn-danger")[0].disabled = true;
+	}
+}
+
+function toggleverbo(){
+        var checkboxes = document.getElementsByClassName('check[]');
+        var checked = 0;
+        for(var i = 0; i < checkboxes.length; i++){
+            if(checkboxes[i].checked === true){
+                checked++;
+            }
+            if(checked > 1){
+               break;
+            }
+        }
+	if(checked === 1){
+            document.getElementsByClassName("check btn btn-danger")[0].disabled = false;
+            document.getElementById("exampleModalLabel").innerHTML = "Apagar o Verbo?";
+            document.getElementById("modalid").innerHTML = "Irá apagar as frases que contenham este verbo.";
+	}
+        else if(checked > 1){
+            document.getElementsByClassName("check btn btn-danger")[0].disabled = false;
+            document.getElementById("exampleModalLabel").innerHTML = "Apagar os Verbos?";
+            document.getElementById("modalid").innerHTML = "Irá apagar as frases que contenham este verbo.";
+        }
+	else{
+           document.getElementsByClassName("check btn btn-danger")[0].disabled = true;
+	}
+}
+
+function toggleAgrupamentos(){
+        var checkboxes = document.getElementsByClassName('check[]');
+        var checked = 0;
+        for(var i = 0; i < checkboxes.length; i++){
+            if(checkboxes[i].checked === true){
+                checked++;
+            }
+            if(checked > 1){
+               break;
+            }
+        }
+	if(checked === 1){
+            document.getElementsByClassName("check btn btn-danger")[0].disabled = false;
+            document.getElementById("exampleModalLabel").innerHTML = "Apagar o Agrupamento?";
+            document.getElementById("modalid").innerHTML = "Irá apagar a associção às frases e agrupamentos.";
+	}
+        else if(checked > 1){
+            document.getElementsByClassName("check btn btn-danger")[0].disabled = false;
+            document.getElementById("exampleModalLabel").innerHTML = "Apagar os Agrupamentos?";
+            document.getElementById("modalid").innerHTML = "Irá apagar a associção às frases e agrupamentos.";
+        }
+	else{
+           document.getElementsByClassName("check btn btn-danger")[0].disabled = true;
+	}
+}
+
+
+
